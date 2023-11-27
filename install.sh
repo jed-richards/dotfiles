@@ -5,8 +5,12 @@ dotfiles_dir=~/dotfiles
 log_file=~/dotfiles_install.log
 
 # Array of packages to install
-packages=(git tmux vim zsh curl npm node python3 i3 alacritty)
+declare -a packages
 
+# Read the contents of packages.txt into the array
+mapfile -t packages < packages.txt
+
+# Loop through the array and try to install each package
 for package in ${packages[*]}; do
     echo "Installing $package"
     sudo apt-get install $package -y
