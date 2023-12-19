@@ -1,5 +1,9 @@
 alacritty
+cargo
+cmake
+cowsay
 curl
+fortune-mod
 fzf
 gcc
 git
@@ -7,6 +11,7 @@ grep
 gzip
 htop
 i3
+manpages-posix-dev
 nala
 neofetch
 neovim
@@ -17,7 +22,6 @@ python3-pip
 python3-setuptools
 python3.10-venv
 ripgrep
-stow
 tmux
 tree
 unzip
@@ -25,4 +29,3 @@ valgrind
 vim
 zoxide
 zsh
-
