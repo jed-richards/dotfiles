@@ -21,7 +21,6 @@ exec --no-startup-id nm-applet
 ##############
 set $terminal alacritty
 set $browser firefox
-#set $browser brave
 #set $rofi "rofi -no-config -no-lazy-grab -show drun -modi drun -theme ~/.config/rofi/launcher.rasi"
 #set $music spotify
 
