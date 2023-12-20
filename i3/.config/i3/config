@@ -255,13 +255,11 @@ client.background       #ffffff
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        status_command i3status
+    status_command i3status
 }
 
 ###############
 #  AUTOSTART  #
 ###############
-#exec_always --no-startup-id picom --config ~/.config/i3/picom.conf
-#exec_always --no-startup-id nitrogen --restore
-#exec_always --no-startup-id killall polybar && ~/.config/polybar/launch.sh
-#exec_always --no-startup-id $HOME/.config/polybar/launch.sh --forest
+exec_always --no-startup-id feh --bg-scale ~/dotfiles/wallpapers/code_monkey.jpg
+exec --no-startup-id compton

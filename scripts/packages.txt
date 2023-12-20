@@ -1,8 +1,10 @@
 alacritty
 cargo
 cmake
+compton
 cowsay
 curl
+feh
 fzf
 gcc
 git
