@@ -268,4 +268,5 @@ bar {
 #  AUTOSTART  #
 ###############
 exec_always --no-startup-id feh --bg-scale ~/dotfiles/wallpapers/code_monkey.jpg
+#exec_always --no-startup-id feh --bg-scale ~/dotfiles/wallpapers/crazy_space_monkey.jpeg
 exec --no-startup-id compton
