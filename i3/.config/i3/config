@@ -21,7 +21,10 @@ exec --no-startup-id nm-applet
 ##############
 set $terminal alacritty
 set $browser firefox
-set $music spotify
+set $music "flatpak run com.spotify.Client"
+set $obsidian "flatpak run md.obsidian.Obsidian"
+set $discord "flatpak run com.discordapp.Discord"
+
 #set $rofi "rofi -no-config -no-lazy-grab -show drun -modi drun -theme ~/.config/rofi/launcher.rasi"
 
 
@@ -70,6 +73,8 @@ bindsym $mod+Return exec $terminal
 bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 bindsym $mod+b exec $browser
 bindsym $mod+m exec $music
+bindsym $mod+o exec $obsidian
+bindsym $mod+p exec $discord
 
 
 
@@ -179,8 +184,10 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 ####################
 #    ASSIGNMENTS   #
 ####################
-#assign [class="^Google-chrome$" instance="^google-chrome$"] $ws2
-assign [class="^Spotify$" instance="^spotify$"] $ws3
+assign [class="^firefox$" instance="^Navigator$"] $ws1
+assign [class="^obsidian$" instance="^obsidian$"] $ws3
+assign [class="^Spotify$" instance="^spotify$"] $ws9
+assign [class="^discord$" instance="^discord$"] $ws10
 
 
 
