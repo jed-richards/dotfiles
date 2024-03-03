@@ -1,4 +1,8 @@
-import = ["/home/jed-richards/.config/alacritty/themes/themes/iterm.toml"]
+import = ["/home/richjed/.config/alacritty/themes/themes/iterm.toml"]
+#import = ["/home/richjed/.config/alacritty/themes/themes/argonaut.toml"]
+#import = ["/home/richjed/.config/alacritty/themes/themes/catppuccin_macchiato.toml"]
+#import = ["/home/richjed/.config/alacritty/themes/themes/catppuccin_mocha.toml"]
+#import = ["/home/richjed/.config/alacritty/themes/themes/rose-pine.toml"]
 live_config_reload = true
 
 [bell]
