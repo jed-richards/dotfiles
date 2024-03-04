@@ -19,7 +19,7 @@ exec --no-startup-id nm-applet
 ##############
 #    APPS    #
 ##############
-set $terminal alacritty
+set $terminal kitty
 set $browser firefox
 set $music "flatpak run com.spotify.Client"
 set $obsidian "flatpak run md.obsidian.Obsidian"
