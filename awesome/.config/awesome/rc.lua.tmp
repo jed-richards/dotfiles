@@ -1,0 +1,98 @@
+-- {{{ Load required libraries
+
+-- If LuaRocks is installed, make sure that packages installed through it are
+-- found (e.g. lgi). If LuaRocks is not installed, do nothing.
+pcall(require, "luarocks.loader")
+
+-- Standard awesome library
+local gears = require("gears")
+local awful = require("awful")
+require("awful.autofocus")
+
+-- Theme handling library
+local beautiful = require("beautiful")
+
+-- Notification library
+local menubar = require("menubar")
+
+-- Enable hotkeys help widget for VIM and other apps
+-- when client with a matching name is opened:
+require("awful.hotkeys_popup.keys")
+
+-- }}}
+
+-- {{{ Error handling }}}
+require("main.error-handling")
+
+-- {{{ Global config library }}}
+RC = {}
+RC.programs = require("main.programs")
+RC.keys = require("main.keys")
+
+-- {{{ Custom Local Library }}}
+local main = {
+	layouts = require("main.layouts"),
+	menu = require("main.menu"),
+	rules = require("main.rules"),
+}
+
+local bindings = {
+	globalbuttons = require("main.keys.globalbuttons"),
+	clientbuttons = require("main.keys.clientbuttons"),
+	globalkeys = require("main.keys.globalkeys"),
+	bindtotags = require("main.keys.bindtotags"),
+	clientkeys = require("main.keys.clientkeys"),
+}
+
+-- {{{ Layouts }}}
+-- Table of layouts to cover with awful.layout.inc, order matters.
+-- a variable needed in main.tags, and statusbar
+-- awful.layout.layouts = { ... }
+RC.layouts = main.layouts()
+
+-- {{{ Menu widget }}}
+RC.mainmenu = main.menu()
+RC.launcher = awful.widget.launcher({ image = beautiful.awesome_icon, menu = RC.mainmenu })
+
+-- {{{ Mouse and Key bindings }}}
+RC.globalkeys = bindings.globalkeys()
+RC.globalkeys = bindings.bindtotags(RC.globalkeys)
+RC.clientkeys = bindings.clientkeys()
+
+-- Set keys
+root.keys(RC.globalkeys)
+
+-- Set mouse buttons
+root.buttons(bindings.globalbuttons())
+
+-- {{{ Statusbar: Wibar }}}
+require("main.deco.statusbar")
+
+-- {{{ Rules }}}
+-- Rules to apply to new clients (through the "manage" signal).
+awful.rules.rules = main.rules(bindings.clientkeys(), bindings.clientbuttons())
+
+-- {{{ Theme }}}
+--local use_default = true
+--if not use_default then
+--	local themes = require("themes.themes")
+--	local chosen_theme = themes.multicolor
+--	beautiful.init(string.format("%s/.config/awesome/themes/%s/theme.lua", os.getenv("HOME"), chosen_theme))
+--else
+--	beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+--	beautiful.wallpaper = RC.wallpaper
+--end
+beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+--beautiful.wallpaper = RC.wallpaper
+
+-- Set the terminal for applications that require it
+menubar.utils.terminal = RC.programs.terminal
+
+-- {{{ If Theme }}}
+-- Create a wibox for each screen and add it
+--awful.screen.connect_for_each_screen(function(s)
+--	beautiful.at_screen_connect(s)
+--end)
+
+-- {{{ Signals }}}
+require("main.signals")
