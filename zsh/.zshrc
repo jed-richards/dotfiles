@@ -76,6 +76,7 @@ plugins=(
     zsh-autosuggestions
     zsh-syntax-highlighting
     conda-zsh-completion
+    rye
 )
 
 source $ZSH/oh-my-zsh.sh
