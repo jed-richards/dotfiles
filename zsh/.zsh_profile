@@ -1,0 +1,18 @@
+export XDG_CONFIG_HOME=$HOME/.config
+VIM="nvim"
+
+PERSONAL=$XDG_CONFIG_HOME/personal
+source $PERSONAL/env
+for i in `find -L $PERSONAL`; do
+    source $i
+done
+
+source /usr/share/doc/fzf/examples/key-bindings.zsh
+source /usr/share/doc/fzf/examples/completion.zsh
+
+export GIT_EDITOR=$VIM
+
+addToPathFront $HOME/.local/scripts
+addToPathFront $HOME/.local/bin
+
+bindkey -s ^f "tmux-sessionizer\n"
