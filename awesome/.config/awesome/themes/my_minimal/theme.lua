@@ -23,7 +23,8 @@ theme.wallpaper = theme.confdir .. "/wallpaper.jpg"
 --theme.wallpaper = theme.confdir .. "/wall2.jpeg"
 --theme.wallpaper = theme.confdir .. "/wall3.jpg"
 
-theme.font = "Terminus 8"
+--theme.font = "Terminus 8"
+theme.font = "FiraMono Nerd Font 8"
 
 --theme.bg_normal = "#000000"
 --theme.bg_focus = "#000000"
