@@ -1,0 +1,81 @@
+[[language]]
+name = "rust"
+auto-format = true
+
+[language-server.rust-analyzer.config.check]
+command = "clippy"
+
+[[language]]
+name = "python"
+auto-format = true
+
+[[language]]
+name = "javascript"
+formatter = { command = 'deno', args = ["fmt", "-", "--ext", "js" ] }
+auto-format = true
+
+[[language]]
+name = "json"
+formatter = { command = 'deno', args = ["fmt", "-", "--ext", "json" ] }
+
+[[language]]
+name = "typescript"
+formatter = { command = 'deno', args = ["fmt", "-", "--ext", "ts" ] }
+auto-format = true
+shebangs = ["deno", "node"]
+roots = ["deno.json", "package.json", "tsconfig.json"]
+#language-servers = ["deno-lsp"]
+
+#[language-server.deno-lsp]
+#command = "deno"
+#args = ["lsp"]
+#environment = { NO_COLOR = "1" }
+
+# [language-server.deno-lsp.config.deno]
+# enable = true
+# # Uncomment to enable completion of unstable features of Deno
+# # unstable = true
+# # Uncomment to cache dependencies on save
+# # cacheOnSave = true
+# # Enable completion of importing from registries
+# # Enable completion of function calls
+# suggest = { completeFunctionCalls = false, imports = { hosts = { "https://deno.land" = true } } }
+
+[[language]]
+name = "jsx"
+formatter = { command = 'deno', args = ["fmt", "-", "--ext", "jsx" ] }
+auto-format = true
+
+[[language]]
+name = "tsx"
+formatter = { command = 'deno', args = ["fmt", "-", "--ext", "tsx" ] }
+auto-format = true
+
+
+[[language]]
+name = "typst"
+scope = "source.typst"
+injection-regex = "typst"
+roots = []
+comment-token = "//"
+file-types = ["typ"]
+indent = { tab-width = 2, unit = " " }
+language-servers = [ "typst-lsp" ]
+text-width = 100
+rulers = [100]
+soft-wrap.wrap-at-text-width = true
+
+[language.auto-pairs]
+'(' = ')'
+'{' = '}'
+'[' = ']'
+'"' = '"'
+'`' = '`'
+'$' = '$'
+
+# [[grammar]]
+# name = "typst"
+# source = { path = "/path/to/tree-sitter-typst" }
+#
+# [language-server.typst-lsp]
+# command = "typst-lsp"
