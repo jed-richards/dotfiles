@@ -82,6 +82,7 @@ plugins=(
     zsh-syntax-highlighting
     rye
     gh
+    watchexec
 )
 
 source $ZSH/oh-my-zsh.sh
