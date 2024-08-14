@@ -1,17 +1,27 @@
 # dotfiles
+
 Collection of my dotfiles
+
+## Setup
+
+```bash
+git submodule update --init --recursive
+```
 
 ## Installations
 
 ### kitty (terminal emulator)
+
 [Kitty Docs](https://sw.kovidgoyal.net/kitty/)
 
 Install script
+
 ```
 curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
 ```
 
 Create symlinks to binaries
+
 ```
 ln -sf ~/.local/kitty.app/bin/kitty ~/.local/kitty.app/bin/kitten ~/.local/bin/
 ```
