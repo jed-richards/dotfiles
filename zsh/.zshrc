@@ -118,8 +118,15 @@ source $ZSH/oh-my-zsh.sh
 source ~/.zsh_profile
 
 export PATH="/home/jed-richards/bin:$PATH"
+export PATH="/usr/local/bin/:$PATH"
+export PATH="/home/jed-richards/.cargo/bin:$PATH"
 alias vim="nvim"
 #alias discord="flatpak run com.discordapp.Discord"
 #alias spotify="flatpak run com.spotify.Client"
 #alias obsidian="flatpak run md.obsidian.Obsidian"
 #alias obs="flatpak run com.obsproject.Studio"
+
+# AWS CLI completion
+autoload bashcompinit && bashcompinit
+autoload -Uz compinit && compinit
+complete -C '/usr/local/bin/aws_completer' aws
