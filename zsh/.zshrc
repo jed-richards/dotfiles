@@ -83,6 +83,7 @@ plugins=(
     rye
     gh
     watchexec
+    diesel
 )
 
 source $ZSH/oh-my-zsh.sh
