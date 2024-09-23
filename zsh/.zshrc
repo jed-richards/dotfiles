@@ -84,6 +84,7 @@ plugins=(
     gh
     watchexec
     diesel
+    just
 )
 
 source $ZSH/oh-my-zsh.sh
