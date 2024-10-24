@@ -73,9 +73,9 @@ ZSH_THEME="robbyrussell"
 plugins=(
     git
     z
-    ripgrep
+    # ripgrep
     rust
-    fd
+    # fd
     docker
     docker-compose
     zsh-autosuggestions
@@ -85,6 +85,7 @@ plugins=(
     watchexec
     diesel
     just
+    dotenv
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -122,6 +123,10 @@ source ~/.zsh_profile
 export PATH="/home/jed-richards/bin:$PATH"
 export PATH="/usr/local/bin/:$PATH"
 export PATH="/home/jed-richards/.cargo/bin:$PATH"
+
+# alias pyright-langserver='/home/jed-richards/.local/share/nvim/mason/packages/pyright/node_modules/pyright/langserver.index.js'
+# export PATH="/path/to/directory:$PATH"
+
 alias vim="nvim"
 #alias discord="flatpak run com.discordapp.Discord"
 #alias spotify="flatpak run com.spotify.Client"
