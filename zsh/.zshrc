@@ -137,3 +137,6 @@ alias vim="nvim"
 autoload bashcompinit && bashcompinit
 autoload -Uz compinit && compinit
 complete -C '/usr/local/bin/aws_completer' aws
+
+# Ranger uses $EDITOR
+export EDITOR="nvim"
