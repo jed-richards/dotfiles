@@ -18,7 +18,7 @@
 -- ]]
 
 local M = {
-	terminal = "kitty",
+	terminal = "wezterm",
 	browser = "firefox",
 	editor = os.getenv("EDITOR") or "nvim",
 	music = "spotify", -- flatpak
