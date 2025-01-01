@@ -7,7 +7,7 @@ local config = wezterm.config_builder()
 config.color_scheme = "Catppuccin Macchiato"
 
 -- Set font
-config.font = wezterm.font("FiraMono Nerd Font")
+config.font = wezterm.font("FiraCode Nerd Font")
 config.font_size = 12
 
 -- Disable tab bar
