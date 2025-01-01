@@ -1,9 +1,12 @@
 local wezterm = require("wezterm")
-local color_picker = require("commands.color_picker")
-local action = wezterm.action
+
+-- Construct config
 local config = wezterm.config_builder()
 
-config.color_scheme = "Catppuccin Mocha"
+-- Set color scheme
+config.color_scheme = "Catppuccin Macchiato"
+
+-- Set font
 config.font = wezterm.font("FiraMono Nerd Font")
 config.font_size = 12
 
@@ -16,33 +19,6 @@ config.window_padding = {
 	right = 0,
 	top = 0,
 	bottom = 0,
-}
-
-wezterm.on("change-color-next", function(window, pane)
-	local color = color_picker.change_color("next")
-	window:set_config_overrides({
-		color_scheme = color,
-	})
-end)
-
-wezterm.on("change-color-prev", function(window, pane)
-	local color = color_picker.change_color("prev")
-	window:set_config_overrides({
-		color_scheme = color,
-	})
-end)
-
-config.keys = {
-	{
-		key = "RightArrow",
-		mods = "CTRL|SHIFT",
-		action = action.EmitEvent("change-color-next"),
-	},
-	{
-		key = "LeftArrow",
-		mods = "CTRL|SHIFT",
-		action = action.EmitEvent("change-color-prev"),
-	},
 }
 
 return config
