@@ -13,10 +13,17 @@ config.font_size = 12
 -- Set character variants for font
 config.harfbuzz_features = {
 	"cv10", -- Changes variant of char `l` (cv07-10)
-	"ss02", -- Changes variant of `<=` and `>=` ligatures
 	"zero", -- Change variant of char `0` (zero, cv11-13)
 	"cv14", -- Change variant of char `3`
 	"ss03", -- Change variant of char `&`
+
+	-- Disables ligatures in most fonts
+	"calt=0",
+	"clig=0",
+	"liga=0",
+
+	-- Ligatures
+	"ss02", -- Changes variant of `<=` and `>=` ligatures
 }
 
 -- Disable tab bar
