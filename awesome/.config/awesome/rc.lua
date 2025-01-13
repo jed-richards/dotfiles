@@ -562,11 +562,11 @@ globalkeys = mytable.join(
 
 	-- Screen brightness
 	awful.key({}, "XF86MonBrightnessUp", function()
-		awful.util.spawn("xbacklight -inc 10")
+		awful.util.spawn("brightnessctl set +10%")
 	end, { description = "raise brightness", group = "hotkeys" }),
 
 	awful.key({}, "XF86MonBrightnessDown", function()
-		awful.util.spawn("xbacklight -dec 10")
+		awful.util.spawn("brightnessctl set 10%-")
 	end, { description = "lower brightness", group = "hotkeys" }),
 
 	-- Screenshot
