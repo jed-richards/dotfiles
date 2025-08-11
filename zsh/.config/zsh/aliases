@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+alias ls="ls --color=auto"
+
+# Editor
+alias vim="nvim"
+
+# Git
+alias gco="git checkout"
+alias glog="git log --oneline --decorate --graph"
+alias gst="git status"
+alias gwt="git worktree"

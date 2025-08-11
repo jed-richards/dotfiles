@@ -1,0 +1,16 @@
+#!/usr/bin/env zsh
+
+# Enable advanced completion system
+zmodload zsh/complist
+
+# Create cache dir if dne
+[ -d "$XDG_CACHE_HOME"/zsh ] || mkdir -p "$XDG_CACHE_HOME"/zsh
+
+# Setup completion styles and options
+autoload -U compinit
+zstyle ':completion:*' menu select
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME"/zsh/zcompcache
+_comp_options+=(globdots)  # Include hidden files in completion
+
+# Initialize completion system with versioned dump
+compinit -d "$XDG_CACHE_HOME"/zsh/zcompdump-$ZSH_VERSION
