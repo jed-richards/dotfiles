@@ -1,5 +1,0 @@
-#!/usr/bin/env zsh
-
-autoload -U colors && colors
-
-PS1="%{$fg[magenta]%}%~%{$fg[red]%} %{$reset_color%}$%b "

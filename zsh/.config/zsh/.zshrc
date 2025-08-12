@@ -16,7 +16,11 @@ source "$ZDOTDIR/aliases"
 source "$ZDOTDIR/completion"
 source "$ZDOTDIR/keybinds"
 source "$ZDOTDIR/plugins/init"
-source "$ZDOTDIR/prompt"
+
+# Prompts
+fpath=($ZDOTDIR/prompts $fpath)
+autoload -U promptinit && promptinit
+prompt jed
 
 #== Other
 

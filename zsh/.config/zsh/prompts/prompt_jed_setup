@@ -1,0 +1,56 @@
+#!/usr/bin/env zsh
+
+# Created by Jed Richards
+# Date: 2025-08-12
+# GitHub: jed-richards
+
+# Resources:
+# - https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html
+# - [vcs_info stuff](https://zsh.sourceforge.io/Doc/Release/User-Contributions.html#Version-Control-Information)
+# - [Color Picker](https://robotmoon.com/zsh-prompt-generator/)
+# - [Nerd Font Icons](https://www.nerdfonts.com/cheat-sheet)
+# - `man zshall`
+#   - search for PROMPT THEMES
+
+prompt_jed_help() {
+  cat <<EOF
+This is my custom prompt!  You can invoke it with:
+
+  prompt jed
+EOF
+}
+
+prompt_jed_precmd() {
+    vcs_info
+    time_box="%B%F{99}[%t]%f%b"
+    print -P ""
+    print -P "$time_box $vcs_info_msg_0_"
+}
+
+prompt_jed_setup() {
+    autoload -Uz vcs_info
+
+    # Common Format String Variables:
+    #
+    # %s: The VCS name (e.g., git, svn).
+    # %b: The current branch name.
+    # %a: The action name (e.g., merge, rebase).
+    # %u: Unstaged changes indicator. (**requires check-for-changes**)
+    # %c: Staged changes indicator. (**requires check-for-changes**)
+    zstyle ':vcs_info:*' enable git
+    zstyle ':vcs_info:git:*' check-for-changes true
+    zstyle ':vcs_info:git:*' stagedstr '%F{green}+%f'
+    zstyle ':vcs_info:git:*' unstagedstr '%F{red}!%f'
+    zstyle ':vcs_info:*' use-prompt-escapes true
+    zstyle ':vcs_info:git:*' formats "%B%F{blue}[%s]:%f%F{red}(%b)%f%%b %c%u"
+    zstyle ':vcs_info:git:*' actionformats "%B%F{blue}[%s]:%f%F{red}(%b | %a)%f%%b %c%u"
+
+    # icon="󰁔"
+    icon="󰄛"
+    working_dir_with_color="%B%F{cyan}(%2~)%f%b"
+    PS1="$working_dir_with_color %(?:%B%F{green}$icon%f%b :%B%F{red}[%?] $icon%f%b )"
+
+    add-zsh-hook precmd prompt_jed_precmd
+}
+
+prompt_jed_setup "$@"
