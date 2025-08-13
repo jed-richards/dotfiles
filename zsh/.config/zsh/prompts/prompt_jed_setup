@@ -41,7 +41,7 @@ EOF
 
 prompt_jed_precmd() {
     vcs_info
-    time_box="%B%F{99}[%t]%f%b"
+    time_box="%B%F{99}[ %t]%f%b"
     nix_shell_prompt=$(prompt_jed_get_nix_shell_prompt)
 
     print -P ""
