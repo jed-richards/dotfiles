@@ -10,3 +10,6 @@
 [submodule "zsh/.config/zsh/plugins/zsh-autosuggestions"]
 	path = zsh/.config/zsh/plugins/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule "zsh/.config/zsh/plugins/zsh-nix-shell"]
+	path = zsh/.config/zsh/plugins/zsh-nix-shell
+	url = https://github.com/chisui/zsh-nix-shell.git

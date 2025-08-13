@@ -12,6 +12,25 @@
 # - `man zshall`
 #   - search for PROMPT THEMES
 
+# Util function to get nix shell
+#
+# This was based on https://github.com/nix-community/nix-zsh-completions/blob/master/nix-zsh-completions.plugin.zsh
+prompt_jed_get_nix_shell_prompt() {
+    local nix_shell_name=""
+    local nix_shell_prompt=""
+
+    if [[ -n ${IN_NIX_SHELL} && ${IN_NIX_SHELL} != "0" || ${IN_NIX_RUN} && ${IN_NIX_RUN} != "0" ]]; then
+        if [[ -n ${IN_NIX_SHELL} && ${IN_NIX_SHELL} != "0" ]]; then
+            nix_shell_name="nix-shell"
+        else
+            nix_shell_name="nix-run"
+        fi
+        nix_shell_prompt="%B%F{8}[%F{3}${nix_shell_name}%F{8}]%f%b "
+    fi
+
+    echo $nix_shell_prompt
+}
+
 prompt_jed_help() {
   cat <<EOF
 This is my custom prompt!  You can invoke it with:
@@ -23,8 +42,10 @@ EOF
 prompt_jed_precmd() {
     vcs_info
     time_box="%B%F{99}[%t]%f%b"
+    nix_shell_prompt=$(prompt_jed_get_nix_shell_prompt)
+
     print -P ""
-    print -P "$time_box $vcs_info_msg_0_"
+    print -P "$nix_shell_prompt$time_box $vcs_info_msg_0_"
 }
 
 prompt_jed_setup() {

@@ -6,6 +6,13 @@ ZSH_PLUGIN_DIR="$ZDOTDIR/plugins"
 source "$ZSH_PLUGIN_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
+# Nix
+source "$ZSH_PLUGIN_DIR/zsh-nix-shell/nix-shell.plugin.zsh"
+
+# TODO: look at https://github.com/nix-community/nix-zsh-completions
+# source "$ZSH_PLUGIN_DIR/nix-zsh-completions/nix-zsh-completions.plugin.zsh"
+# fpath=($ZSH_PLUGIN_DIR/nix-zsh-completions $fpath)
+
 # Source tooling integration
 eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
