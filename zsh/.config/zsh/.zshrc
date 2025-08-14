@@ -27,6 +27,20 @@ fpath=($ZDOTDIR/prompts $fpath)
 autoload -U promptinit && promptinit
 prompt jed
 
+
+#== Source tooling integration
+if command -v fzf &>/dev/null; then
+    eval "$(fzf --zsh)"
+fi
+
+if command -v zoxide &>/dev/null; then
+    eval "$(zoxide init zsh)"
+fi
+
+if command -v gh &>/dev/null; then
+    eval "$(gh completion --shell zsh)"
+fi
+
 #== Other
 
 # Disable all error beeps and beeps for pager with LESS
