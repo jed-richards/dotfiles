@@ -45,7 +45,7 @@ fi
 
 # Disable all error beeps and beeps for pager with LESS
 unsetopt BEEP
-export LESS="$LESS -Q"
+export LESS="$LESS -Q -R" # -Q for quiet and -R for raw ansi escape sequences (color)
 
 # Add bins to path
 export PATH="/home/jed-richards/bin:$PATH"
