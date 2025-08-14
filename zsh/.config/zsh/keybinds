@@ -1,8 +1,13 @@
 #!/usr/bin/env zsh
 
-bindkey -s ^f "tmux-sessionizer\n"
+# See `man zshzle`
+bindkey '^[[1;5C' forward-word   # [Ctrl-right] - forward one word
+bindkey "^[[1;5D" backward-word  # [Ctrl-left] - backward one word
 
 # Edit command with $EDITOR w/ <ctrl-v>
 autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey '^v' edit-command-line
+
+# Scripts
+bindkey -s ^f "tmux-sessionizer\n"

@@ -11,6 +11,12 @@ HISTFILE="$XDG_STATE_HOME"/zsh/history
 HISTSIZE=10000
 SAVEHIST=10000
 
+#== Options (see `man zshall` and search for "SPECIFYING OPTIONS")
+setopt EXTENDED_HISTORY       # write history in `:<start time>:<elapsed seconds>;<command>' format
+setopt HIST_IGNORE_ALL_DUPS   # delete old entry if new entry is a duplicate
+setopt SHARE_HISTORY          # share shell history between sessions
+setopt COMPLETE_ALIASES
+
 #== Add ons
 source "$ZDOTDIR/aliases"
 source "$ZDOTDIR/completion"

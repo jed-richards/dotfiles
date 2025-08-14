@@ -10,3 +10,6 @@ alias gco="git checkout"
 alias glog="git log --oneline --decorate --graph"
 alias gst="git status"
 alias gwt="git worktree"
+
+# Nix
+alias nd="nix develop -c $SHELL" # use your set shell for nix flake

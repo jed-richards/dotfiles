@@ -14,5 +14,10 @@ source "$ZSH_PLUGIN_DIR/zsh-nix-shell/nix-shell.plugin.zsh"
 # fpath=($ZSH_PLUGIN_DIR/nix-zsh-completions $fpath)
 
 # Source tooling integration
-eval "$(fzf --zsh)"
-eval "$(zoxide init zsh)"
+if command -v fzf &>/dev/null; then
+    eval "$(fzf --zsh)"
+fi
+
+if command -v zoxide &>/dev/null; then
+    eval "$(zoxide init zsh)"
+fi
