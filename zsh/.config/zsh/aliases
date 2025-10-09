@@ -7,10 +7,11 @@ alias vim="nvim"
 
 # Git
 alias gco="git checkout"
+alias gcb="git checkout -b"
+alias gcf="git branch | fzf | xargs -I BRANCH git checkout BRANCH"
 alias glog="git log --oneline --decorate --graph"
 alias gst="git status"
 alias gwt="git worktree"
-alias gcf="git branch | fzf | xargs -I BRANCH git checkout BRANCH"
 
 # Nix
 alias nd="nix develop -c $SHELL" # use your set shell for nix flake

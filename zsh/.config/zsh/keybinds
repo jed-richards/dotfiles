@@ -4,6 +4,9 @@
 bindkey '^[[1;5C' forward-word   # [Ctrl-right] - forward one word
 bindkey "^[[1;5D" backward-word  # [Ctrl-left] - backward one word
 
+# TODO: add key bind for <ctrl-backspace> to delete a word backward
+# TODO: add key bind for <ctrl-delete> to delete a word forward
+
 # Edit command with $EDITOR w/ <ctrl-v>
 autoload -Uz edit-command-line
 zle -N edit-command-line

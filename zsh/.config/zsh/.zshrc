@@ -15,6 +15,7 @@ SAVEHIST=10000
 setopt EXTENDED_HISTORY       # write history in `:<start time>:<elapsed seconds>;<command>' format
 setopt HIST_IGNORE_ALL_DUPS   # delete old entry if new entry is a duplicate
 setopt SHARE_HISTORY          # share shell history between sessions
+setopt INTERACTIVE_COMMENTS   # allow comments in interactive shell (enables # prefix)
 
 #== Add ons
 source "$ZDOTDIR/aliases"
@@ -47,6 +48,11 @@ fi
 unsetopt BEEP
 export LESS="$LESS -Q -R" # -Q for quiet and -R for raw ansi escape sequences (color)
 
+# Unset the default alias for `run-help`; it is an alias for `man`.
+# Then load the more advanced `run-help`
+unalias run-help
+autoload -U run-help
+
 # Add bins to path
 export PATH="/home/jed-richards/bin:$PATH"
 export PATH="/home/jed-richards/.cargo/bin:$PATH"
@@ -59,4 +65,4 @@ export PYFLX_WORKTREES="/home/jed-richards/work/pyflx-worktrees"
 export FLX_WORKTREES="/home/jed-richards/work/flx-worktrees"
 
 # Add flx specific tools to PATH
-export PATH="$FLX_WORKTREES/flx-clean/tools:$PATH"
+export PATH="$FLX_WORKTREES/flx-working/tools:$PATH"
