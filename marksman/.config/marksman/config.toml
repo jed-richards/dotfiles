@@ -1,0 +1,25 @@
+# This is a global config for the marksman lsp. This can be overridden by local
+# config in a `.marksman.toml` file in the project's root folder.
+#
+# Resources:
+# - https://github.com/artempyanykh/marksman/tree/main
+# - https://github.com/artempyanykh/marksman/blob/main/docs/configuration.md
+# - https://github.com/artempyanykh/marksman/blob/main/Tests/default.marksman.toml
+
+[core]
+markdown.file_extensions = ["md", "markdown"]
+text_sync = "full"
+
+[code_action]
+toc.enable = true
+create_missing_file.enable = true
+
+[completion]
+# The maximum number of candidates returned for a completion
+candidates = 20
+
+# The style of wiki links completion.
+# Other values include:
+# * "file-stem" to complete using file name without an extension,
+# * "file-path-stem" same as above but using file path.
+wiki.style = "title-slug"
