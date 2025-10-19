@@ -1,193 +1,264 @@
-/*
- * See https://github.com/Alexays/Waybar/wiki/Styling 
- * */
 * {
-    font-family: "FiraMono Nerd Font", monospace;
-    font-size: 13px;
+    font-family: "FiraCode Nerd Font", monospace;
+    font-size: 14px;
+    min-height: 0;
 }
 
-window#waybar {
-    background-color: rgba(43, 48, 59, 0.8);
-    color: #ffffff;
-    transition-property: background-color;
-    transition-duration: .5s;
+#waybar {
+    background: rgba(30, 30, 46, 0.95);
+    color: #cdd6f4;
+    transition: all 0.3s ease;
 }
 
-window#waybar.hidden {
-    opacity: 0.2;
-}
-
-button {
-    box-shadow: inset 0 -3px transparent;
-    border: none;
-    border-radius: 0;
-}
-
-button:hover {
-    background: inherit;
-    box-shadow: inset 0 -3px #ffffff;
-}
-
-#workspaces button {
-    padding: 0 5px;
-    background-color: transparent;
-    color: #ffffff;
-}
-
-#workspaces button:hover {
-    background: rgba(0, 0, 0, 0.2);
-}
-
-#workspaces button.active {
-    background-color: #64727D;
-    box-shadow: inset 0 -3px #ffffff;
-}
-
-#workspaces button.urgent {
-    background-color: #eb4d4b;
-}
-
-#mode {
-    background-color: #64727D;
-    border-bottom: 3px solid #ffffff;
-}
-
+/* ========== Modules Spacing ========== */
 #clock,
+#network,
+#workspaces,
+#window,
+#submap,
+#custom-weather,
+#custom-moon,
+.hardware-child,
 #battery,
 #cpu,
 #memory,
-#disk,
 #temperature,
-#backlight,
-#network,
 #wireplumber,
-#custom-media,
-#tray,
-#mode,
-#idle_inhibitor,
-#scratchpad,
-#mpd {
-    padding: 0 10px;
-    color: #ffffff;
+#wireplumber.source,
+.power-child,
+#custom-power,
+#custom-quit,
+#custom-lock,
+#custom-reboot {
+    padding: 0 12px;
+    margin: 4px 2px;
+    border-radius: 8px;
+    background: rgba(49, 50, 68, 0.8);
+    transition: all 0.3s ease;
 }
 
-#window,
-#workspaces {
-    margin: 0 4px;
+/* ========== Clock ========== */
+#clock {
+    background: linear-gradient(135deg, #89b4fa, #b4befe);
+    color: #1e1e2e;
+    font-weight: bold;
 }
 
-.modules-left > widget:first-child > #workspaces {
+#clock:hover {
+    background: linear-gradient(135deg, #b4befe, #89b4fa);
+}
+
+/* ========== Weather & Moon ========== */
+#custom-weather {
+    background: rgba(116, 199, 236, 0.2);
+    color: #74c7ec;
+}
+
+#custom-moon {
+    background: rgba(245, 224, 220, 0.15);
+    color: #f5e0dc;
     margin-left: 0;
 }
 
-.modules-right > widget:last-child > * {
-    margin-right: 0;
+/* ========== Workspaces ========== */
+#workspaces {
+    background: transparent;
+    padding: 0 4px;
 }
 
-#clock {
-    background-color: #64727D;
+#workspaces button {
+    color: #6c7086;
+    padding: 0 8px;
+    margin: 0 2px;
+    border-radius: 6px;
+    background: rgba(49, 50, 68, 0.6);
+    transition: all 0.3s ease;
 }
 
-#battery {
-    background-color: #ffffff;
-    color: #000000;
+#workspaces button:hover {
+    background: rgba(69, 71, 90, 0.8);
+    color: #cdd6f4;
+    box-shadow: 0 0 8px rgba(137, 180, 250, 0.4);
 }
 
-#battery.charging, #battery.plugged {
-    color: #ffffff;
-    background-color: #26A65B;
+#workspaces button.active {
+    background: linear-gradient(135deg, #89b4fa, #74c7ec);
+    color: #1e1e2e;
+    font-weight: bold;
 }
 
-@keyframes blink {
-    to {
-        background-color: #ffffff;
-        color: #000000;
-    }
+#workspaces button.urgent {
+    background: #f38ba8;
+    color: #1e1e2e;
+    animation: urgent-pulse 1s infinite;
 }
 
-#battery.critical:not(.charging) {
-    background-color: #f53c3c;
-    color: #ffffff;
-    animation-name: blink;
-    animation-duration: 0.5s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
+@keyframes urgent-pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
 }
 
-label:focus {
-    background-color: #000000;
+/* ========== Window Title ========== */
+#window {
+    color: #a6adc8;
+    font-style: italic;
 }
 
-#cpu {
-    background-color: #2ecc71;
-    color: #000000;
+window.empty {
+    background: transparent;
+    padding: 0;
+    margin: 0;
 }
 
-#memory {
-    background-color: #9b59b6;
+/* ========== Submap ========== */
+#submap {
+    background: #f38ba8;
+    color: #1e1e2e;
+    font-weight: bold;
 }
 
-#disk {
-    background-color: #964B00;
-}
-
-#backlight {
-    background-color: #90b1b1;
-}
-
+/* ========== Network ========== */
 #network {
-    background-color: #2980b9;
+    background: rgba(166, 227, 161, 0.2);
+    color: #a6e3a1;
 }
 
 #network.disconnected {
-    background-color: #f53c3c;
+    background: rgba(243, 139, 168, 0.2);
+    color: #f38ba8;
 }
 
+/* ========== Audio ========== */
 #wireplumber {
-    background-color: #66cc99;
-    color: #2a5c45;
+    background: rgba(203, 166, 247, 0.2);
+    color: #cba6f7;
 }
 
 #wireplumber.muted {
-    background-color: #f53c3c;
+    background: rgba(243, 139, 168, 0.2);
+    color: #f38ba8;
+}
+
+#wireplumber.source {
+    background: rgba(249, 226, 175, 0.2);
+    color: #f9e2af;
+    margin-left: 0;
+}
+
+/* ========== Hardware Group ========== */
+#battery {
+    background: rgba(166, 227, 161, 0.2);
+    color: #a6e3a1;
+}
+
+#battery.charging {
+    background: rgba(249, 226, 175, 0.2);
+    color: #f9e2af;
+}
+
+#battery.warning {
+    background: rgba(250, 179, 135, 0.3);
+    color: #fab387;
+}
+
+#battery.critical {
+    background: rgba(243, 139, 168, 0.3);
+    color: #f38ba8;
+    animation: critical-blink 1s infinite;
+}
+
+@keyframes critical-blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+#cpu {
+    background: rgba(180, 190, 254, 0.2);
+    color: #b4befe;
+    margin-left: 0;
+}
+
+#memory {
+    background: rgba(203, 166, 247, 0.2);
+    color: #cba6f7;
+    margin-left: 0;
 }
 
 #temperature {
-    background-color: #f0932b;
+    background: rgba(137, 180, 250, 0.2);
+    color: #89b4fa;
+    margin-left: 0;
 }
 
 #temperature.critical {
-    background-color: #eb4d4b;
+    background: rgba(243, 139, 168, 0.3);
+    color: #f38ba8;
 }
 
-#tray {
-    background-color: #2980b9;
+/* ========== Power Group ========== */
+#custom-power {
+    background: rgba(243, 139, 168, 0.2);
+    color: #f38ba8;
 }
 
-#tray > .passive {
-    -gtk-icon-effect: dim;
+#custom-power:hover,
+#custom-quit:hover,
+#custom-lock:hover,
+#custom-reboot:hover {
+    background: rgba(243, 139, 168, 0.4);
 }
 
-#tray > .needs-attention {
-    -gtk-icon-effect: highlight;
-    background-color: #eb4d4b;
+.power-child {
+    background: rgba(69, 71, 90, 0.8);
+    margin-left: 0;
 }
 
-#idle_inhibitor {
-    background-color: #2d3436;
+#custom-quit {
+    color: #fab387;
 }
 
-#idle_inhibitor.activated {
-    background-color: #ecf0f1;
-    color: #2d3436;
+#custom-lock {
+    color: #94e2d5;
 }
 
+#custom-reboot {
+    color: #f9e2af;
+}
+
+/* ========== Groups ========== */
+.modules-left > widget:first-child > * {
+    margin-left: 8px;
+}
+
+.modules-right > widget:last-child > * {
+    margin-right: 8px;
+}
+
+/* ========== Hover Effects ========== */
+#clock:hover,
+#network:hover,
+#battery:hover,
+#cpu:hover,
+#memory:hover,
+#temperature:hover,
+#wireplumber:hover,
+#custom-weather:hover,
+#custom-moon:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ========== Tooltip ========== */
 tooltip {
-    background: #1e1e2e;
-    border: 1px solid #313244;
+    background: rgba(30, 30, 46, 0.95);
+    border: 1px solid #89b4fa;
+    border-radius: 8px;
+    padding: 8px;
 }
 
 tooltip label {
     color: #cdd6f4;
+    font-family: "FiraCode Nerd Font", monospace;
+    font-size: 13px;
 }

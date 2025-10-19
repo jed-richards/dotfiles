@@ -1,0 +1,4 @@
+- Fix CSS to not be so big and clunky
+- Fix weather (too big of space between icon and tmp)
+- Add tooltip hover on power (restart, logout, shutdown, ...)
+- Look at [third party modules](https://github.com/Alexays/Waybar/wiki/Module:-Custom:-Third-party)
