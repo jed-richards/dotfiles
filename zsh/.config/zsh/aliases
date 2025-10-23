@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 alias ls="ls --color=auto"
+alias tmpdir="echo 'Leaving: $(pwd)' && cd $(mktemp -d)"
 
 # Editor
 alias vim="nvim"
