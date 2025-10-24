@@ -5,14 +5,14 @@
     "mode": "dock",
 
     "modules-left": [
-        "clock",
-        "group/wttr",
         "hyprland/workspaces",
         "hyprland/submap"
     ],
 
     "modules-center": [
-        "hyprland/window",
+        // TODO: Figure out where to put wttr
+        "group/wttr",
+        "clock",
     ],
 
     "modules-right": [
@@ -23,7 +23,8 @@
     ],
 
     "clock": {
-        "format": " {:%I:%M %p  %a, %b %e}",
+        "format": " {:%I:%M %p}",
+        "format-alt": " {:%a, %b %e}",
         "tooltip-format": "<tt>{calendar}</tt>",
         "actions": {
             "on-click-right": "shift_down",
@@ -53,10 +54,6 @@
         "persistent-workspaces": {
           "*": 5
         }
-    },
-
-    "hyprland/window": {
-        "format": "{title}"
     },
 
     /* Hardware group */
