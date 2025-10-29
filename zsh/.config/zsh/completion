@@ -6,6 +6,9 @@ zmodload zsh/complist
 # Create cache dir if dne
 [ -d "$XDG_CACHE_HOME"/zsh ] || mkdir -p "$XDG_CACHE_HOME"/zsh
 
+# Add user-specific completions (machine-local, not in dotfiles)
+[ -d "$HOME/.local/share/zsh/completions" ] && fpath=("$HOME/.local/share/zsh/completions" $fpath)
+
 # Setup completion styles and options
 autoload -U compinit
 zstyle ':completion:*' menu select
