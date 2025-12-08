@@ -4,30 +4,23 @@ Collection of my dotfiles
 
 ## Setup
 
+1. Clone the repo
+
+```bash
+git clone git@github.com:jed-richards/dotfiles.git
+```
+
+2. Install [stow](https://www.gnu.org/software/stow/)
+
+3. Add initialize submodules
+
 ```bash
 git submodule update --init --recursive
 ```
 
-## Installations
+4. Stow!
 
-### kitty (terminal emulator)
-
-[Kitty Docs](https://sw.kovidgoyal.net/kitty/)
-
-Install script
-
-```
-curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
-```
-
-Create symlinks to binaries
-
-```
-ln -sf ~/.local/kitty.app/bin/kitty ~/.local/kitty.app/bin/kitten ~/.local/bin/
-```
-
-or
-
-```
-ln -sf ~/.local/kitty.app/bin/kitty ~/.local/kitty.app/bin/kitten /usr/bin/
+```bash
+# Example to stow nvim directory
+stow -t $HOME nvim
 ```
