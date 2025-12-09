@@ -5,20 +5,21 @@
     "mode": "dock",
 
     "modules-left": [
-        "hyprland/workspaces",
-        "hyprland/submap"
+        "group/hardware",
     ],
 
     "modules-center": [
         // TODO: Figure out where to put wttr
-        "group/wttr",
-        "clock",
+        "hyprland/workspaces",
+        "hyprland/submap",
     ],
 
     "modules-right": [
         "network",
+        // "bluetooth",
         "group/audio",
-        "group/hardware",
+        "battery",
+        "clock",
         "group/power"
     ],
 
@@ -39,8 +40,18 @@
         "tooltip-format": "{essid} - {ifname} via {gwaddr}",
         "format-linked": "{ifname} (No IP)",
         "format-disconnected": "Disconnected ⚠",
+        "format-disabled": "Disabled ⚠",
         "format-alt": "{ifname}:{essid} {ipaddr}/{cidr}",
-        "on-click-right": "nm-connection-editor"
+        // "on-click-right": "nm-connection-editor"
+        "on-click-right": "ghostty -e nmtui-connect"
+    },
+
+    "bluetooth": {
+        "format-on": " on",
+        "format-disabled": " off",
+        "format-connected": " {device_alias}",
+        // "on-click": "~/.config/waybar/scripts/toggle_bluetooth.sh",
+        "on-click-right": "blueman-manager"
     },
 
     "hyprland/workspaces": {
@@ -59,13 +70,13 @@
     /* Hardware group */
     "group/hardware": {
         "orientation": "horizontal",
-        "drawer": {
-            "transition-duration": 500,
-            // The CSS class to add to the children of the drawer, excluding 
-            // the "group leader". Its purpose is simply to help with styling.
-            "children-class": "hardware-child",
-            "transition-left-to-right": false
-        },
+        // "drawer": {
+        //     "transition-duration": 500,
+        //     // The CSS class to add to the children of the drawer, excluding
+        //     // the "group leader". Its purpose is simply to help with styling.
+        //     "children-class": "hardware-child",
+        //     "transition-left-to-right": false
+        // },
         "modules": [
             "battery",
             "cpu",
@@ -100,8 +111,8 @@
     },
 
     "cpu": {
-        "interval": 1,
-        "format": "  {}%",
+        "interval": 2,
+        "format": "  {usage}%",
         "max-length": 10
     },
 
@@ -171,7 +182,7 @@
         "orientation": "inherit",
         "drawer": {
             "transition-duration": 500,
-            // The CSS class to add to the children of the drawer, excluding 
+            // The CSS class to add to the children of the drawer, excluding
             // the "group leader". Its purpose is simply to help with styling.
             "children-class": "power-child",
             "transition-left-to-right": false
