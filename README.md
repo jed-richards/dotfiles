@@ -24,3 +24,13 @@ git submodule update --init --recursive
 # Example to stow nvim directory
 stow -t $HOME nvim
 ```
+
+## Dev
+
+### Waybar
+
+Use the below to auto reload `waybar` when editing the config.
+
+```bash
+watchexec -w waybar/.config "(pkill waybar || true) && hyprctl dispatch exec waybar"
+```
