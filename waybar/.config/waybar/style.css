@@ -173,9 +173,13 @@ window.empty {
 }
 
 #wireplumber.source {
-  background: rgba(249, 226, 175, 0.2);
-  color: #f9e2af;
-  /* margin-left: 0; */
+  background: rgba(137, 180, 250, 0.2);
+  color: #89b4fa;
+}
+
+#wireplumber.sink-muted {
+  background: rgba(243, 139, 168, 0.2);
+  color: #f38ba8;
 }
 
 /* ========== Hardware Group ========== */

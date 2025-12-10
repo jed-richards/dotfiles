@@ -78,7 +78,7 @@
         //     "transition-left-to-right": false
         // },
         "modules": [
-            "battery",
+            // "battery",
             "cpu",
             "memory",
             "temperature"
