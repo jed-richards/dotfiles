@@ -4,7 +4,7 @@
 }
 
 #waybar {
-  font-size: 14px;
+  font-size: 13px;
   /* background: rgba(30, 30, 46, 0.95); */
   background: linear-gradient(180deg, #000022, #000055);
   color: #cdd6f4;
@@ -33,7 +33,7 @@
 #custom-quit,
 #custom-lock,
 #custom-reboot {
-  padding: 3px 5px 0;
+  padding: 2px 5px 0;
   margin: 0px 2px;
   border-radius: 0px;
   background: rgba(49, 50, 68, 0.8);
@@ -74,7 +74,7 @@
 
 #workspaces button {
   color: #6c7086;
-  padding: 1px 13px 0 8px;
+  padding: 1px 8px 0 5px;
   margin: 0 1px;
   border: none;
   border-radius: 0px;
