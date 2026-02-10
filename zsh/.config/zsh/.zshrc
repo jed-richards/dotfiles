@@ -22,6 +22,7 @@ source "$ZDOTDIR/aliases"
 source "$ZDOTDIR/completion"
 source "$ZDOTDIR/keybinds"
 source "$ZDOTDIR/plugins/init"
+source "$ZDOTDIR/work"
 
 # Prompts
 fpath=($ZDOTDIR/prompts $fpath)
@@ -55,14 +56,3 @@ autoload -U run-help
 
 # Add bins to path
 export PATH="/home/jed-richards/bin:$PATH"
-export PATH="/home/jed-richards/.cargo/bin:$PATH"
-export PATH="$HOME/.npm-global/bin:$PATH"
-export PATH="$PATH:$HOME/projects/wtree"
-
-# Work
-export ANGEL_WORKTREES="/home/jed-richards/work/angel-worktrees"
-export PYFLX_WORKTREES="/home/jed-richards/work/pyflx-worktrees"
-export FLX_WORKTREES="/home/jed-richards/work/flx-worktrees"
-
-# Add flx specific tools to PATH
-export PATH="$FLX_WORKTREES/flx-working/tools:$PATH"
