@@ -35,12 +35,19 @@ if command -v fzf &>/dev/null; then
     eval "$(fzf --zsh)"
 fi
 
+# TODO: write this to ~/.local/share/zsh/completions/_zoxide
 if command -v zoxide &>/dev/null; then
     eval "$(zoxide init zsh)"
 fi
 
+# TODO: write this to ~/.local/share/zsh/completions/_gh
 if command -v gh &>/dev/null; then
     eval "$(gh completion --shell zsh)"
+fi
+
+# TODO: write this to ~/.local/share/zsh/completions/_docker
+if command -v docker &>/dev/null; then
+    eval "$(docker completion zsh)"
 fi
 
 #== Other
@@ -53,6 +60,3 @@ export LESS="$LESS -Q -R" # -Q for quiet and -R for raw ansi escape sequences (c
 # Then load the more advanced `run-help`
 unalias run-help
 autoload -U run-help
-
-# Add bins to path
-export PATH="/home/jed-richards/bin:$PATH"

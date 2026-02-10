@@ -9,6 +9,11 @@ zmodload zsh/complist
 # Add user-specific completions (machine-local, not in dotfiles)
 [ -d "$HOME/.local/share/zsh/completions" ] && fpath=("$HOME/.local/share/zsh/completions" $fpath)
 
+# Add homebrew based completions if using brew
+if command -v brew &>/dev/null; then
+    fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+fi
+
 # Setup completion styles and options
 autoload -U compinit
 zstyle ':completion:*' menu select
