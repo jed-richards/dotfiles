@@ -10,12 +10,14 @@
 # reloaded while running; some only apply to new windows and others may require
 # a full restart to take effect.
 font-family = "FiraCode Nerd Font"
-font-size = 11
+font-size = 13
 font-feature = -calt
 font-feature = -liga
 font-feature = -dlig
-theme = Ayu
-background-opacity = .95
+# theme = Ayu
+# theme = Mirage
+theme = Ayu Mirage
+# background-opacity = .95
 working-directory = home
 confirm-close-surface = false
 resize-overlay = never
