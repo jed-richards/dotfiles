@@ -50,6 +50,10 @@ if command -v docker &>/dev/null; then
     eval "$(docker completion zsh)"
 fi
 
+if [ -e /usr/share/nvm/init-nvm.sh ]; then
+    source /usr/share/nvm/init-nvm.sh
+fi
+
 #== Other
 
 # Disable all error beeps and beeps for pager with LESS
@@ -60,3 +64,6 @@ export LESS="$LESS -Q -R" # -Q for quiet and -R for raw ansi escape sequences (c
 # Then load the more advanced `run-help`
 unalias run-help
 autoload -U run-help
+
+# Environment variables
+export LEDGER_FILE="~/finance/2026.journal"

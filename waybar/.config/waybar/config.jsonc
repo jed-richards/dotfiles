@@ -1,221 +1,204 @@
 // See https://github.com/Alexays/Waybar/wiki/Configuration
 {
-    "layer": "top",
-    "position": "top",
-    "mode": "dock",
+  "layer": "top",
+  "position": "top",
+  "mode": "dock",
 
-    "modules-left": [
-        "group/hardware",
+  "modules-left": ["group/hardware"],
+
+  "modules-center": [
+    // TODO: Figure out where to put wttr
+    "hyprland/workspaces",
+    "hyprland/submap",
+  ],
+
+  "modules-right": [
+    "network",
+    // "bluetooth",
+    "group/audio",
+    "battery",
+    "clock",
+    "group/power",
+  ],
+
+  "clock": {
+    "format": " {:%I:%M %p}",
+    "format-alt": " {:%a, %b %e}",
+    "tooltip-format": "<tt>{calendar}</tt>",
+    "actions": {
+      "on-click-right": "shift_down",
+      "on-click": "shift_up",
+    },
+  },
+
+  "network": {
+    "format-wifi": "{icon}  {signalStrength}%",
+    "format-ethernet": "{ipaddr}/{cidr}",
+    "format-icons": ["󰤟", "󰤢", "󰤥"],
+    "tooltip-format": "{essid} - {ifname} via {gwaddr}",
+    "format-linked": "{ifname} (No IP)",
+    "format-disconnected": "Disconnected ⚠",
+    "format-disabled": "Disabled ⚠",
+    "format-alt": "{ifname}:{essid} {ipaddr}/{cidr}",
+    // "on-click-right": "nm-connection-editor"
+    "on-click-right": "ghostty -e nmtui-connect",
+  },
+
+  "bluetooth": {
+    "format-on": " on",
+    "format-disabled": " off",
+    "format-connected": " {device_alias}",
+    // "on-click": "~/.config/waybar/scripts/toggle_bluetooth.sh",
+    "on-click-right": "blueman-manager",
+  },
+
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "format-icons": {
+      "default": "",
+      "active": "",
+      "urgent": "",
+    },
+    "on-click": "activate",
+    // "persistent-workspaces": {
+    //   "*": 5
+    // }
+  },
+
+  /* Hardware group */
+  "group/hardware": {
+    "orientation": "horizontal",
+    // "drawer": {
+    //     "transition-duration": 500,
+    //     // The CSS class to add to the children of the drawer, excluding
+    //     // the "group leader". Its purpose is simply to help with styling.
+    //     "children-class": "hardware-child",
+    //     "transition-left-to-right": false
+    // },
+    "modules": [
+      // "battery",
+      "cpu",
+      "memory",
+      "temperature",
     ],
+  },
 
-    "modules-center": [
-        // TODO: Figure out where to put wttr
-        "hyprland/workspaces",
-        "hyprland/submap",
+  "battery": {
+    "states": {
+      "good": 95,
+      "warning": 40,
+      "critical": 30,
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": " {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-alt": "{time} {icon}",
+    "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+  },
+
+  "cpu": {
+    "interval": 2,
+    "format": "  {usage}%",
+    "max-length": 10,
+  },
+
+  "memory": {
+    "interval": 30,
+    "format": "  {used:0.1f}G/{total:0.1f}G",
+    "tooltip-format": "Mem: {used:0.1}G / {total:0.1f}G\nSwp: {swapUsed:0.1}G / {swapTotal:0.1f}G",
+  },
+
+  "temperature": {
+    "critical-threshold": 80,
+    "format": "  {temperatureC}°C",
+  },
+
+  /* Audio group */
+  "group/audio": {
+    "orientation": "horizontal",
+    "modules": ["wireplumber", "wireplumber#source"],
+  },
+
+  "wireplumber": {
+    "format": "{icon}  {volume}%",
+    "format-muted": "",
+    "on-click": "pwvucontrol",
+    "on-click-right": "wpctl set-mute @DEFAULT_SINK@ toggle",
+    "format-icons": ["", "", ""],
+    "scroll-step": 5,
+  },
+
+  "wireplumber#source": {
+    "node-type": "Audio/Source",
+    "format": "󰍬 {volume}%",
+    "format-muted": "󰍭",
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
+    "scroll-step": 5,
+  },
+
+  /* Weather and moon group */
+  "group/wttr": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/weather", // First element is the "group leader" and won't ever be hidden
+      // TODO: gap?
+      "custom/moon",
     ],
+  },
 
-    "modules-right": [
-        "network",
-        // "bluetooth",
-        "group/audio",
-        "battery",
-        "clock",
-        "group/power"
+  "custom/weather": {
+    "format": "{}",
+    "exec": "~/.config/waybar/scripts/weather.sh",
+    "interval": 1800, // update every 30 minutes
+    "tooltip": false,
+  },
+
+  "custom/moon": {
+    "format": "{}",
+    "exec": "~/.config/waybar/scripts/moon.sh",
+    "interval": 86400, // update once a day
+    "tooltip": false,
+  },
+
+  /* Power group */
+  "group/power": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 500,
+      // The CSS class to add to the children of the drawer, excluding
+      // the "group leader". Its purpose is simply to help with styling.
+      "children-class": "power-child",
+      "transition-left-to-right": false,
+    },
+    "modules": [
+      "custom/power", // First element is the "group leader" and won't ever be hidden
+      "custom/quit",
+      "custom/lock",
+      "custom/reboot",
     ],
+  },
 
-    "clock": {
-        "format": " {:%I:%M %p}",
-        "format-alt": " {:%a, %b %e}",
-        "tooltip-format": "<tt>{calendar}</tt>",
-        "actions": {
-            "on-click-right": "shift_down",
-            "on-click": "shift_up"
-        },
-    },
+  "custom/quit": {
+    "format": "󰗼",
+    "tooltip": false,
+    "on-click": "hyprctl dispatch exit",
+  },
 
-    "network": {
-        "format-wifi": "{icon}  {signalStrength}%",
-        "format-ethernet": "{ipaddr}/{cidr}",
-        "format-icons": ["󰤟", "󰤢", "󰤥"],
-        "tooltip-format": "{essid} - {ifname} via {gwaddr}",
-        "format-linked": "{ifname} (No IP)",
-        "format-disconnected": "Disconnected ⚠",
-        "format-disabled": "Disabled ⚠",
-        "format-alt": "{ifname}:{essid} {ipaddr}/{cidr}",
-        // "on-click-right": "nm-connection-editor"
-        "on-click-right": "ghostty -e nmtui-connect"
-    },
+  "custom/lock": {
+    "format": "󰍁",
+    "tooltip": false,
+    "on-click": "hyprlock",
+  },
 
-    "bluetooth": {
-        "format-on": " on",
-        "format-disabled": " off",
-        "format-connected": " {device_alias}",
-        // "on-click": "~/.config/waybar/scripts/toggle_bluetooth.sh",
-        "on-click-right": "blueman-manager"
-    },
+  "custom/reboot": {
+    "format": "󰜉",
+    "tooltip": false,
+    "on-click": "reboot",
+  },
 
-    "hyprland/workspaces": {
-        "format": "{icon}",
-        "format-icons": {
-            "default": "",
-            "active": "",
-            "urgent": ""
-        },
-        "on-click": "activate",
-        "persistent-workspaces": {
-          "*": 5
-        }
-    },
-
-    /* Hardware group */
-    "group/hardware": {
-        "orientation": "horizontal",
-        // "drawer": {
-        //     "transition-duration": 500,
-        //     // The CSS class to add to the children of the drawer, excluding
-        //     // the "group leader". Its purpose is simply to help with styling.
-        //     "children-class": "hardware-child",
-        //     "transition-left-to-right": false
-        // },
-        "modules": [
-            // "battery",
-            "cpu",
-            "memory",
-            "temperature"
-        ]
-    },
-
-    "battery": {
-        "states": {
-            "good": 95,
-            "warning": 40,
-            "critical": 30
-        },
-        "format": "{icon} {capacity}%",
-        "format-charging": " {capacity}%",
-        "format-plugged": " {capacity}%",
-        "format-alt": "{time} {icon}",
-        "format-icons": [
-            "󰂎",
-            "󰁺",
-            "󰁻",
-            "󰁼",
-            "󰁽",
-            "󰁾",
-            "󰁿",
-            "󰂀",
-            "󰂁",
-            "󰂂",
-            "󰁹"
-        ]
-    },
-
-    "cpu": {
-        "interval": 2,
-        "format": "  {usage}%",
-        "max-length": 10
-    },
-
-    "memory": {
-        "interval": 30,
-        "format": "  {used:0.1f}G/{total:0.1f}G",
-        "tooltip-format": "Mem: {used:0.1}G / {total:0.1f}G\nSwp: {swapUsed:0.1}G / {swapTotal:0.1f}G"
-    },
-
-    "temperature": {
-        "critical-threshold": 80,
-        "format": "  {temperatureC}°C"
-    },
-
-    /* Audio group */
-    "group/audio": {
-        "orientation": "horizontal",
-        "modules": [
-            "wireplumber",
-            "wireplumber#source"
-        ]
-    },
-
-    "wireplumber": {
-        "format": "{icon}  {volume}%",
-        "format-muted": "",
-        "on-click": "pwvucontrol",
-        "on-click-right": "wpctl set-mute @DEFAULT_SINK@ toggle",
-        "format-icons": ["", "", ""],
-        "scroll-step": 5
-    },
-
-    "wireplumber#source": {
-        "node-type": "Audio/Source",
-        "format": "󰍬 {volume}%",
-        "format-muted": "󰍭",
-        "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
-        "scroll-step": 5
-    },
-
-    /* Weather and moon group */
-    "group/wttr": {
-        "orientation": "horizontal",
-        "modules": [
-            "custom/weather", // First element is the "group leader" and won't ever be hidden
-            // TODO: gap?
-            "custom/moon"
-        ]
-    },
-
-    "custom/weather": {
-        "format": "{}",
-        "exec": "~/.config/waybar/scripts/weather.sh",
-        "interval": 1800,  // update every 30 minutes
-        "tooltip": false
-    },
-
-    "custom/moon": {
-        "format": "{}",
-        "exec": "~/.config/waybar/scripts/moon.sh",
-        "interval": 86400,  // update once a day
-        "tooltip": false
-    },
-
-    /* Power group */
-    "group/power": {
-        "orientation": "inherit",
-        "drawer": {
-            "transition-duration": 500,
-            // The CSS class to add to the children of the drawer, excluding
-            // the "group leader". Its purpose is simply to help with styling.
-            "children-class": "power-child",
-            "transition-left-to-right": false
-        },
-        "modules": [
-            "custom/power", // First element is the "group leader" and won't ever be hidden
-            "custom/quit",
-            "custom/lock",
-            "custom/reboot"
-        ]
-    },
-
-    "custom/quit": {
-        "format": "󰗼",
-        "tooltip": false,
-        "on-click": "hyprctl dispatch exit"
-    },
-
-    "custom/lock": {
-        "format": "󰍁",
-        "tooltip": false,
-        "on-click": "hyprlock"
-    },
-
-    "custom/reboot": {
-        "format": "󰜉",
-        "tooltip": false,
-        "on-click": "reboot"
-    },
-
-    "custom/power": {
-        "format": "",
-        "tooltip": false,
-        "on-click": "shutdown now"
-    },
+  "custom/power": {
+    "format": "",
+    "tooltip": false,
+    "on-click": "shutdown now",
+  },
 }
