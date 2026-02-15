@@ -22,7 +22,10 @@ source "$ZDOTDIR/aliases"
 source "$ZDOTDIR/completion"
 source "$ZDOTDIR/keybinds"
 source "$ZDOTDIR/plugins/init"
-source "$ZDOTDIR/work"
+
+if [ -e "$ZDOTDIR/work" ]; then
+    source "$ZDOTDIR/work"
+fi
 
 # Prompts
 fpath=($ZDOTDIR/prompts $fpath)

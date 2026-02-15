@@ -5,4 +5,7 @@ ZSH_PLUGIN_DIR="$ZDOTDIR/plugins"
 # Source plugins
 source "$ZSH_PLUGIN_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-source "$ZSH_PLUGIN_DIR/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
+
+if [ -e "$ZSH_PLUGIN_DIR/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh" ]; then
+    source "$ZSH_PLUGIN_DIR/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
+fi
