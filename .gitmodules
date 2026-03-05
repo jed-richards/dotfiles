@@ -13,3 +13,6 @@
 [submodule "tools/wtree"]
 	path = tools/wtree
 	url = git@github.com:jed-richards/wtree.git
+[submodule "claude/.claude/plugins/neoscribe"]
+	path = claude/.claude/plugins/neoscribe
+	url = git@github.com:jed-richards/neoscribe.git
