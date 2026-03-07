@@ -1,0 +1,69 @@
+close_when_open = true
+click_to_close = true
+single_click_activation = true
+selection_wrap = true
+theme = "default"
+
+[shell]
+layer = "overlay"
+anchor_top = true
+anchor_bottom = true
+anchor_left = true
+anchor_right = true
+
+[placeholders]
+"default" = { input = "Search  (; for all providers)", list = "No Results" }
+
+[keybinds]
+close = ["Escape"]
+next = ["Down", "ctrl n"]
+previous = ["Up", "ctrl p"]
+toggle_exact = ["ctrl e"]
+quick_activate = ["F1", "F2", "F3", "F4"]
+
+[providers.actions]
+desktopapplications = [
+  { action = "start", default = true, bind = "Return" },
+  { action = "new_instance", label = "new instance", bind = "ctrl Return" },
+  { action = "pin", bind = "ctrl shift p", after = "AsyncReload" },
+  { action = "unpin", bind = "ctrl shift p", after = "AsyncReload" },
+]
+
+[providers]
+# Default: apps + open windows + websearch
+default = ["desktopapplications", "windows", "websearch"]
+# Empty query (just opened): show apps
+empty = ["desktopapplications"]
+max_results = 50
+
+[[providers.prefixes]]
+prefix = ";"
+provider = "providerlist"
+
+[[providers.prefixes]]
+prefix = ">"
+provider = "runner"
+
+[[providers.prefixes]]
+prefix = "/"
+provider = "files"
+
+[[providers.prefixes]]
+prefix = "@"
+provider = "websearch"
+
+[[providers.prefixes]]
+prefix = ":"
+provider = "clipboard"
+
+[[providers.prefixes]]
+prefix = "$"
+provider = "windows"
+
+[[providers.prefixes]]
+prefix = "%"
+provider = "bookmarks"
+
+[[providers.prefixes]]
+prefix = "="
+provider = "calc"
