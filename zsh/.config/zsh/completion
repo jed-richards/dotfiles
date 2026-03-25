@@ -9,6 +9,9 @@ zmodload zsh/complist
 # Add user-specific completions (machine-local, not in dotfiles)
 [ -d "$HOME/.local/share/zsh/completions" ] && fpath=("$HOME/.local/share/zsh/completions" $fpath)
 
+# Add ~/.zfunc for tools that write completions there (e.g. typer, some Python tools)
+[ -d "$HOME/.zfunc" ] && fpath=("$HOME/.zfunc" $fpath)
+
 # Add homebrew based completions if using brew
 if command -v brew &>/dev/null; then
     fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
@@ -22,3 +25,9 @@ _comp_options+=(globdots)  # Include hidden files in completion
 
 # Initialize completion system with versioned dump
 compinit -d "$XDG_CACHE_HOME"/zsh/zcompdump-$ZSH_VERSION
+
+# Terraform completion (uses bash-style completion)
+if command -v terraform &>/dev/null; then
+    autoload -U +X bashcompinit && bashcompinit
+    complete -o nospace -C "$(command -v terraform)" terraform
+fi
