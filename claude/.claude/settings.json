@@ -76,9 +76,14 @@
     "ask": [],
     "defaultMode": "default"
   },
+  "model": "sonnet",
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/scripts/statusline-command.sh"
+  },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": false,
+    "superpowers@claude-plugins-official": true,
     "pr-review-toolkit@claude-plugins-official": false,
     "plugin-dev@claude-plugins-official": false,
     "typescript-lsp@claude-plugins-official": true,
@@ -86,7 +91,12 @@
     "lua-lsp@claude-plugins-official": false,
     "claude-md-management@claude-plugins-official": true,
     "mermaid@bazaar": true,
-    "sdlc@bazaar": true
+    "sdlc@bazaar": true,
+    "para-pkm@bazaar": true,
+    "iwe-pkm@bazaar": true,
+    "feature-dev@claude-plugins-official": true,
+    "supabase@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "bazaar": {
