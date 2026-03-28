@@ -83,17 +83,19 @@
   },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": false,
     "superpowers@claude-plugins-official": true,
     "pr-review-toolkit@claude-plugins-official": false,
-    "plugin-dev@claude-plugins-official": false,
+    "plugin-dev@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": false,
     "claude-md-management@claude-plugins-official": true,
+    "neoscribe@bazaar": true,
     "mermaid@bazaar": true,
     "sdlc@bazaar": true,
-    "para-pkm@bazaar": true,
     "iwe-pkm@bazaar": true,
+    "para-pkm@bazaar": true,
     "feature-dev@claude-plugins-official": true,
     "supabase@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true
@@ -103,8 +105,7 @@
       "source": {
         "source": "git",
         "url": "git@github.com:jed-richards/bazaar.git"
-      },
-      "autoUpdate": true
+      }
     }
   },
   "syntaxHighlightingDisabled": false,
