@@ -143,7 +143,7 @@ binds {
 
     // Session
     Mod+Shift+Ctrl+E { quit; }
-    Mod+Shift+Ctrl+R { reload-config; }
+    Mod+Shift+Ctrl+R { spawn "sh" "-c" "niri msg action reload-config"; }
 }
 
 // ── Window rules ───────────────────────────────────────────────────────────
@@ -153,5 +153,5 @@ window-rule {
     // while satty is open and update the match string below.
     match app-id="satty"
     open-floating true
-    open-centered true
+    // open-centered: floating windows open centered by default in niri
 }
