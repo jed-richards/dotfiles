@@ -22,7 +22,9 @@ input {
 }
 
 output "eDP-1" {
-    scale 1.0
+    scale 1.333
+    // 2560x1600 HiDPI — scale 4/3 gives exactly 1920x1200 logical (cleanest ratio in range)
+    // Other options: 1.25 (→ 2048x1280, more space), 2.0 (→ 1280x800, larger UI)
     // To add DP-3 later: duplicate this block with name "DP-3" and set position
 }
 
@@ -45,6 +47,9 @@ layout {
 }
 
 // ── Autostart ──────────────────────────────────────────────────────────────
+// Propagate Wayland env to D-Bus activation so apps launched via .desktop
+// files (zen browser, LibreOffice, etc.) can find the Wayland display
+spawn-at-startup "sh" "-c" "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=niri DISPLAY"
 // Note: niri does not expand ~ in spawn-at-startup args — use sh -c for paths
 spawn-at-startup "sh" "-c" "waybar --config ~/.config/waybar/niri-config.jsonc"
 spawn-at-startup "dunst"
