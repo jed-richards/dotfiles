@@ -1,0 +1,157 @@
+// ~/.config/niri/config.kdl
+// niri scrollable-tiling Wayland compositor
+// Docs: https://github.com/niri-wm/niri/wiki/Configuration
+
+environment {
+    XCURSOR_SIZE "24"
+    XCURSOR_THEME "default"
+}
+
+input {
+    keyboard {
+        xkb {
+            options "caps:escape"
+        }
+    }
+    touchpad {
+        // tap-to-click disabled (absent = off)
+        click-method "clickfinger"
+        // natural-scroll disabled (absent = off)
+        accel-speed 0.0
+    }
+}
+
+output "eDP-1" {
+    scale 1.0
+    // To add DP-3 later: duplicate this block with name "DP-3" and set position
+}
+
+layout {
+    gaps 3
+
+    struts {
+        top 2   // clearance for waybar; mirrors gaps_out = 2,0,0,0 from Hyprland
+    }
+
+    border {
+        width 2
+        active-color "#33ccffee"
+        inactive-color "#595959aa"
+    }
+
+    focus-ring {
+        off
+    }
+}
+
+// ── Autostart ──────────────────────────────────────────────────────────────
+// Note: niri does not expand ~ in spawn-at-startup args — use sh -c for paths
+spawn-at-startup "sh" "-c" "waybar --config ~/.config/waybar/niri-config.jsonc"
+spawn-at-startup "dunst"
+spawn-at-startup "hypridle"
+spawn-at-startup "sh" "-c" "swaybg -i ~/dotfiles/wallpapers/skipper-and-bennie-1.png -m fill"
+spawn-at-startup "lxqt-policykit-agent"
+spawn-at-startup "xwayland-satellite"
+spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
+spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
+spawn-at-startup "systemctl" "--user" "start" "elephant"
+
+// ── Binds ──────────────────────────────────────────────────────────────────
+binds {
+    // Window management
+    Mod+Q { close-window; }
+    Mod+F { maximize-column; }
+    Mod+Shift+F { fullscreen-window; }
+    Mod+Ctrl+F { toggle-window-floating; }
+    Mod+Shift+C { center-window; }
+    Mod+Shift+P { power-off-monitors; }
+
+    // Focus / move — scrollable model
+    // h/l: scroll between columns   j/k: move within a column (stacked windows)
+    Mod+H { focus-column-left; }
+    Mod+L { focus-column-right; }
+    Mod+J { focus-window-down; }
+    Mod+K { focus-window-up; }
+    Mod+Shift+H { move-column-left; }
+    Mod+Shift+L { move-column-right; }
+    Mod+Shift+J { move-window-down; }
+    Mod+Shift+K { move-window-up; }
+    Mod+Ctrl+Shift+H { focus-monitor-left; }
+    Mod+Ctrl+Shift+L { focus-monitor-right; }
+    Mod+Tab { focus-window-previous; }
+
+    // Column sizing
+    Mod+R { switch-preset-column-width; }       // cycles: 1/3 → 1/2 → 2/3 → full
+    Mod+Shift+R { reset-window-height; }
+    Mod+Minus { set-column-width "-10%"; }
+    Mod+Equal { set-column-width "+10%"; }
+    Mod+Shift+Minus { set-window-height "-10%"; }
+    Mod+Shift+Equal { set-window-height "+10%"; }
+
+    // Tabbed columns
+    Mod+Comma { consume-window-into-column; }   // group window into tab
+    Mod+Period { expel-window-from-column; }    // pop window out of tab
+
+    // Workspaces
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    Mod+Shift+1 { move-window-to-workspace 1; }
+    Mod+Shift+2 { move-window-to-workspace 2; }
+    Mod+Shift+3 { move-window-to-workspace 3; }
+    Mod+Shift+4 { move-window-to-workspace 4; }
+    Mod+Shift+5 { move-window-to-workspace 5; }
+    Mod+Shift+6 { move-window-to-workspace 6; }
+    Mod+Shift+7 { move-window-to-workspace 7; }
+    Mod+Shift+8 { move-window-to-workspace 8; }
+    Mod+Shift+9 { move-window-to-workspace 9; }
+    Mod+BracketLeft { focus-workspace-down; }
+    Mod+BracketRight { focus-workspace-up; }
+    Mod+Shift+BracketLeft { move-window-to-workspace-down; }
+    Mod+Shift+BracketRight { move-window-to-workspace-up; }
+
+    // Apps
+    Mod+Return { spawn "ghostty"; }
+    Mod+Space { spawn "walker"; }
+    Mod+V { spawn "walker" "--modules" "clipboard"; }
+    Mod+Escape { spawn "hyprlock"; }
+    Mod+T { spawn "sh" "-c" "pkill waybar; waybar --config ~/.config/waybar/niri-config.jsonc"; }
+
+    // Screenshots — grim + slurp + satty
+    // --copy-command wl-copy persists clipboard after satty closes (Wayland ownership fix)
+    Print { spawn "sh" "-c" "grim -g \"$(slurp)\" - | satty --filename - --copy-command wl-copy"; }
+    Mod+Print { spawn "sh" "-c" "grim - | satty --filename - --copy-command wl-copy"; }
+    Mod+Ctrl+Print { spawn "sh" "-c" "grim -g \"$(slurp)\" | wl-copy"; }
+
+    // Media keys
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "-l" "1" "@DEFAULT_AUDIO_SINK@" "5%+"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+    XF86AudioMute allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
+    XF86AudioMicMute allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
+    XF86MonBrightnessUp { spawn "brightnessctl" "-e4" "-n2" "set" "5%+"; }
+    XF86MonBrightnessDown { spawn "brightnessctl" "-e4" "-n2" "set" "5%-"; }
+    XF86AudioNext { spawn "playerctl" "next"; }
+    XF86AudioPause { spawn "playerctl" "play-pause"; }
+    XF86AudioPlay { spawn "playerctl" "play-pause"; }
+    XF86AudioPrev { spawn "playerctl" "previous"; }
+
+    // Session
+    Mod+Shift+Ctrl+E { quit; }
+    Mod+Shift+Ctrl+R { reload-config; }
+}
+
+// ── Window rules ───────────────────────────────────────────────────────────
+window-rule {
+    // If this rule doesn't apply, verify the app-id by running:
+    //   niri msg windows
+    // while satty is open and update the match string below.
+    match app-id="satty"
+    open-floating true
+    open-centered true
+}
