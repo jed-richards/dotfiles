@@ -76,7 +76,6 @@
     "ask": [],
     "defaultMode": "default"
   },
-  "model": "sonnet",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/scripts/statusline-command.sh"
@@ -93,11 +92,11 @@
     "claude-md-management@claude-plugins-official": true,
     "neoscribe@bazaar": true,
     "mermaid@bazaar": true,
-    "sdlc@bazaar": true,
-    "iwe-pkm@bazaar": true,
+    "sdlc@bazaar": false,
     "para-pkm@bazaar": true,
+    "iwe-pkm@bazaar": false,
     "feature-dev@claude-plugins-official": true,
-    "supabase@claude-plugins-official": true,
+    "supabase@claude-plugins-official": false,
     "skill-creator@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
