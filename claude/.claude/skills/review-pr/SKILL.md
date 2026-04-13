@@ -86,12 +86,11 @@ together in one commit rather than three separate ones. If the fixes are indepen
 ## Phase 4 — Commit & Push
 
 Stage files explicitly — never `git add .`. Write a conventional commit message that
-covers all grouped fixes. Use `--no-verify` since pre-commit hooks are broken in this
-repo (Python version mismatch).
+covers all grouped fixes.
 
 ```bash
 git add <file1> <file2> ...
-git commit --no-verify -m "type(scope): concise description
+git commit -m "type(scope): concise description
 
 - Bullet per logical change
 - Reference the reviewer's concern, not just 'address PR comments'"
