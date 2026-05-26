@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Check if package.json exists
+if [[ ! -f package.json ]]; then
+  echo "❌ Error: package.json not found in $(pwd)"
+  exit 1
+fi
+
+# jq: maps scripts to "name: command"
+# fzf:
+#  --delimiter ':': splits the input at the colon
+#  --with-nth 1: only displays the script name in the selector
+#  --preview: echoes the second field (the command) into the preview window
+#  --preview-window: 'up:1' puts a 1-line preview box at the top
+SELECTED=$(jq -r '.scripts | to_entries[] | "\(.key): \(.value)"' package.json | fzf \
+  --height 40% \
+  --reverse \
+  --delimiter ':' \
+  --with-nth 1 \
+  --preview 'echo {2..}' \
+  --preview-window 'up:1:wrap' \
+  --header "Select Yarn Script")
+
+# Cleanly extract the script name (the part before the colon)
+SCRIPT_NAME=$(echo "$SELECTED" | cut -d':' -f1)
+
+# Execute only if a selection was made
+if [[ -n "$SCRIPT_NAME" ]]; then
+  yarn "$SCRIPT_NAME" < /dev/tty
+else
+  echo "Exit: No script selected."
+fi
