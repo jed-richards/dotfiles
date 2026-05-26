@@ -22,3 +22,5 @@ theme = dark:Flexoki Dark,light:Alabaster
 working-directory = home
 confirm-close-surface = false
 resize-overlay = never
+
+background-opacity = 1.00
