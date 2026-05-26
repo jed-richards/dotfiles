@@ -1,9 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  },
   "permissions": {
     "allow": [
       "WebFetch(domain:docs.astral.sh)",
@@ -76,6 +72,7 @@
     "ask": [],
     "defaultMode": "default"
   },
+  "model": "sonnet",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/scripts/statusline-command.sh"
@@ -91,13 +88,15 @@
     "lua-lsp@claude-plugins-official": false,
     "claude-md-management@claude-plugins-official": true,
     "neoscribe@bazaar": true,
-    "mermaid@bazaar": true,
+    "mermaid@bazaar": false,
     "sdlc@bazaar": false,
     "para-pkm@bazaar": true,
     "iwe-pkm@bazaar": false,
     "feature-dev@claude-plugins-official": true,
     "supabase@claude-plugins-official": false,
-    "skill-creator@claude-plugins-official": true
+    "skill-creator@claude-plugins-official": true,
+    "atlassian@claude-plugins-official": true,
+    "content@bazaar": true
   },
   "extraKnownMarketplaces": {
     "bazaar": {
@@ -108,5 +107,8 @@
     }
   },
   "syntaxHighlightingDisabled": false,
-  "voiceEnabled": false
+  "effortLevel": "medium",
+  "theme": "dark-ansi",
+  "voiceEnabled": false,
+  "skipAutoPermissionPrompt": true
 }
