@@ -9,16 +9,14 @@
 # Control + Shift + comma on other platforms). Not all config options can be
 # reloaded while running; some only apply to new windows and others may require
 # a full restart to take effect.
-font-family = "FiraCode Nerd Font"
-font-size = 13
+font-family = "FiraCode Nerd Font Mono"
+font-size = 12
 font-feature = -calt
 font-feature = -liga
 font-feature = -dlig
 # theme = Ayu
 # theme = Mirage
-# theme = Ayu Mirage
-theme = dark:Flexoki Dark,light:Alabaster
-# background-opacity = .95
+theme = Ayu Mirage
 working-directory = home
 confirm-close-surface = false
 resize-overlay = never
