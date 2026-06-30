@@ -22,3 +22,4 @@ confirm-close-surface = false
 resize-overlay = never
 
 background-opacity = 1.00
+window-decoration = none
