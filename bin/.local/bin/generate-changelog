@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Exit immediately if any command fails
+set -e
+
+# 1. Check if GitHub CLI is installed
+if ! command -v gh &> /dev/null; then
+    echo "❌ Error: GitHub CLI ('gh') is not installed." >&2
+    echo "Please install it from https://cli.github.com/ first." >&2
+    exit 1
+fi
+
+# 2. Check for required arguments
+if [ "$#" -lt 2 ]; then
+    echo "📋 Usage: $0 <older-commit-or-tag> <newer-commit-or-tag> [output-file]"
+    echo "💡 Example: $0 v1.0.0 v2.0.0"
+    exit 1
+fi
+
+OLDER_COMMIT="$1"
+NEWER_COMMIT="$2"
+# Default to CHANGELOG.md if a third argument isn't provided
+OUTPUT_FILE="${3:-CHANGELOG.md}"
+
+echo "⏳ Fetching commits between $OLDER_COMMIT and $NEWER_COMMIT..."
+
+# 3. Run the GitHub API command
+# Note: gh automatically replaces '{owner}' and '{repo}' if run inside a git repository directory.
+gh api "repos/{owner}/{repo}/compare/${OLDER_COMMIT}...${NEWER_COMMIT}" \
+  --jq '.commits[] | "* [\(.sha[0:7])](\(.html_url)) - \(.commit.message | split("\n")[0])"' > "$OUTPUT_FILE"
+
+echo "✨ Success! Changelog saved to $OUTPUT_FILE"
