@@ -16,6 +16,8 @@ Prefer subagents for file reading and broad searches — keep the main context f
 - Explicit types over inference; handle errors explicitly, no silent failures
 - Prefer functional style: pure functions, immutability, composition over inheritance
 - Parse, don't validate: convert loose input into precise types at the boundary rather than re-checking it later ([Alexis King](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/))
+- Functional Core, Imperative Shell
+- Make illegal states unrepresentable
 
 ## Testing
 

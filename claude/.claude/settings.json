@@ -1,5 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
   "permissions": {
     "allow": [
       "WebFetch(domain:docs.astral.sh)",
@@ -44,7 +47,9 @@
       "Bash(tmux:*)",
       "Bash(df:*)",
       "Bash(du:*)",
-      "Bash(uv:*)"
+      "Bash(uv:*)",
+      "Read(./.env.example)",
+      "Write(./.env.example)"
     ],
     "deny": [
       "Bash(sudo:*)",
@@ -63,8 +68,10 @@
       "Bash(mkfs:*)",
       "Bash(fdisk:*)",
       "Bash(parted:*)",
-      "Read(./.env*)",
-      "Read(*.env)",
+      "Read(./.env)",
+      "Read(**/.env)",
+      "Read(*.env.local)",
+      "Read(*.env.production)",
       "Write(./**/.ssh/**)",
       "Bash(chmod:777:*)",
       "Bash(chown:root:*)"
@@ -72,7 +79,7 @@
     "ask": [],
     "defaultMode": "default"
   },
-  "model": "sonnet",
+  "model": "opusplan",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/scripts/statusline-command.sh"
@@ -80,7 +87,7 @@
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": false,
-    "superpowers@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": false,
     "pr-review-toolkit@claude-plugins-official": false,
     "plugin-dev@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
@@ -92,7 +99,7 @@
     "sdlc@bazaar": false,
     "para-pkm@bazaar": true,
     "iwe-pkm@bazaar": false,
-    "feature-dev@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": false,
     "supabase@claude-plugins-official": false,
     "skill-creator@claude-plugins-official": true,
     "atlassian@claude-plugins-official": true,
@@ -108,7 +115,13 @@
   },
   "syntaxHighlightingDisabled": false,
   "effortLevel": "medium",
+  "autoCompactWindow": 200000,
+  "tui": "fullscreen",
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
   "theme": "dark-ansi",
-  "voiceEnabled": false,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "voiceEnabled": true
 }
