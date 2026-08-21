@@ -1,0 +1,26 @@
+# Circadia Light (Warm Parchment) for Ghostty
+# Ported from https://github.com/tanmaymanojgandhi/circadia
+# ANSI red/cyan (1/9, 6/14) are not part of the upstream palette spec;
+# they're interpolated to match the warm/cool balance of the rest.
+palette = 0=#28323a
+palette = 1=#a83232
+palette = 2=#1e6822
+palette = 3=#8d4400
+palette = 4=#165084
+palette = 5=#6b1d8f
+palette = 6=#00677f
+palette = 7=#5f6d7a
+palette = 8=#46535f
+palette = 9=#c24444
+palette = 10=#2f8a35
+palette = 11=#a85700
+palette = 12=#236bb5
+palette = 13=#8a2fae
+palette = 14=#1f8aa0
+palette = 15=#f4eee1
+background = #f4eee1
+foreground = #28323a
+cursor-color = #195697
+cursor-text = #f4eee1
+selection-background = #e2d8c3
+selection-foreground = #28323a
