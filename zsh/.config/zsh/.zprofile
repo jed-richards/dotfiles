@@ -13,3 +13,4 @@ addToPathFront() {
 
 addToPathFront $HOME/.local/scripts
 addToPathFront $HOME/.local/bin
+addToPathFront $HOME/.local/tools

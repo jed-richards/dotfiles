@@ -70,3 +70,25 @@ autoload -U run-help
 
 # Environment variables
 export LEDGER_FILE="~/finance/2026.journal"
+
+# Useful
+pr-notify() {
+  local pr_url
+  pr_url="$(gh pr view "$@" --json url -q .url 2>/dev/null)"
+  if gh pr checks --watch "$@"; then
+    terminal-notifier -title "CI" -message "All checks passed" -sound Glass -open "$pr_url"
+  else
+    terminal-notifier -title "CI" -message "Checks failed" -sound Basso -open "$pr_url"
+  fi
+}
+
+notify() {
+  local cmd="$*"
+  "$@"
+  local exit_code=$?
+  if [ $exit_code -eq 0 ]; then
+    terminal-notifier -title "$cmd" -message "Succeeded" -sound Glass
+  else
+    terminal-notifier -title "$cmd" -message "Failed (exit $exit_code)" -sound Basso
+  fi
+}

@@ -13,3 +13,6 @@ alias gcf="git branch | fzf | xargs -I BRANCH git checkout BRANCH"
 alias glog="git log --oneline --decorate --graph"
 alias gst="git status"
 alias gwt="git worktree"
+
+# Python envs
+alias data-analysis="source ~/.venvs/data-analysis/bin/activate"
