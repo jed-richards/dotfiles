@@ -16,3 +16,6 @@
 [submodule "tmux/.config/tmux/plugins/tpm"]
 	path = tmux/.config/tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
+[submodule "tmux/.config/tmux/plugins/circadia"]
+	path = tmux/.config/tmux/plugins/circadia
+	url = https://github.com/tanmaymanojgandhi/circadia
