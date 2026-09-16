@@ -13,3 +13,6 @@
 [submodule "claude/.claude/plugins/neoscribe"]
 	path = claude/.claude/plugins/neoscribe
 	url = git@github.com:jed-richards/neoscribe.git
+[submodule "tmux/.config/tmux/plugins/tpm"]
+	path = tmux/.config/tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm
