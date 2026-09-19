@@ -1,0 +1,523 @@
+#!/usr/bin/env bash
+#
+# tmux-sessionizer-v2 - Enhanced tmux session manager
+#
+# Features:
+#   - Configuration file support for directories
+#   - Switch between existing sessions or create new ones
+#   - Git repository detection with branch preview
+#   - Session management (list, kill, cleanup)
+#   - Preview window support
+#   - Proper error handling and shellcheck compliance
+#
+# Usage: tmux-sessionizer-v2 [options] [directory]
+
+set -euo pipefail
+
+# Configuration
+readonly CONFIG_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/tmux-sessionizer/config"
+readonly DEFAULT_SEARCH_DIRS=("$HOME/development" "$HOME/sandbox" "$HOME" "$HOME/vault")
+readonly VERSION="2.0.0"
+
+# Colors for output
+readonly RED='\033[0;31m'
+readonly GREEN='\033[0;32m'
+readonly YELLOW='\033[0;33m'
+readonly BLUE='\033[0;34m'
+readonly NC='\033[0m' # No Color
+
+# Print colored messages
+info() { echo -e "${BLUE}[INFO]${NC} $*" >&2; }
+success() { echo -e "${GREEN}[OK]${NC} $*" >&2; }
+warn() { echo -e "${YELLOW}[WARN]${NC} $*" >&2; }
+error() { echo -e "${RED}[ERROR]${NC} $*" >&2; }
+
+# Show usage information
+show_help() {
+    cat << EOF
+tmux-sessionizer-v2 v${VERSION}
+
+A powerful tmux session manager for quick project switching.
+
+USAGE:
+    tmux-sessionizer-v2 [OPTIONS] [DIRECTORY]
+
+OPTIONS:
+    -h, --help          Show this help message
+    -v, --version       Show version information
+    -l, --list          List all existing tmux sessions
+    -s, --switch        Switch between existing sessions only (no new sessions)
+    -k, --kill          Kill a session interactively
+    -K, --kill-all      Kill all tmux sessions (with confirmation)
+    -c, --config        Edit configuration file
+    -a, --all           Search all directories recursively (depth 3)
+    -g, --git-only      Only show git repositories
+    -p, --preview       Enable preview window (default: on)
+    -P, --no-preview    Disable preview window
+
+ARGUMENTS:
+    DIRECTORY           Directly create/switch to session for this directory
+
+CONFIGURATION:
+    Config file: ${CONFIG_FILE}
+    
+    The config file should contain one directory per line:
+        ~/development
+        ~/projects
+        ~/work
+
+KEYBINDINGS (in fzf):
+    Enter       Select and create/switch to session
+    Ctrl-d      Delete selected session (in switch mode)
+    Ctrl-p      Toggle preview window
+    Esc/Ctrl-c  Cancel
+
+EXAMPLES:
+    tmux-sessionizer-v2              # Interactive mode - find directories
+    tmux-sessionizer-v2 ~/myproject  # Direct session for ~/myproject
+    tmux-sessionizer-v2 -s           # Switch between existing sessions
+    tmux-sessionizer-v2 -k           # Kill a session interactively
+    tmux-sessionizer-v2 -g           # Only show git repositories
+
+EOF
+}
+
+# Show version
+show_version() {
+    echo "tmux-sessionizer-v2 v${VERSION}"
+}
+
+# Load search directories from config or use defaults
+load_search_dirs() {
+    local dirs=()
+    
+    if [[ -f "$CONFIG_FILE" ]]; then
+        while IFS= read -r line || [[ -n "$line" ]]; do
+            # Skip empty lines and comments
+            [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
+            # Expand tilde
+            line="${line/#\~/$HOME}"
+            # Only add if directory exists
+            [[ -d "$line" ]] && dirs+=("$line")
+        done < "$CONFIG_FILE"
+    fi
+    
+    # Use defaults if no dirs loaded
+    if [[ ${#dirs[@]} -eq 0 ]]; then
+        for dir in "${DEFAULT_SEARCH_DIRS[@]}"; do
+            [[ -d "$dir" ]] && dirs+=("$dir")
+        done
+    fi
+    
+    printf '%s\n' "${dirs[@]}"
+}
+
+# Create or edit configuration file
+edit_config() {
+    local config_dir
+    config_dir=$(dirname "$CONFIG_FILE")
+    
+    if [[ ! -d "$config_dir" ]]; then
+        mkdir -p "$config_dir"
+        info "Created config directory: $config_dir"
+    fi
+    
+    if [[ ! -f "$CONFIG_FILE" ]]; then
+        cat > "$CONFIG_FILE" << 'EOF'
+# tmux-sessionizer-v2 configuration
+# Add directories to search (one per line)
+# Lines starting with # are comments
+# Tilde (~) expansion is supported
+
+~/development
+~/sandbox
+~/projects
+~
+EOF
+        success "Created default config file: $CONFIG_FILE"
+    fi
+    
+    # Open in editor
+    "${EDITOR:-vim}" "$CONFIG_FILE"
+}
+
+# Generate a safe session name from a path
+get_session_name() {
+    local path="$1"
+    local name
+    
+    # Get basename and replace dots and colons with underscores
+    name=$(basename "$path" | tr '.:-' '___')
+    
+    # Remove leading digits (tmux doesn't like them)
+    name="${name#[0-9]*}"
+    
+    # Fallback if empty
+    [[ -z "$name" ]] && name="session"
+    
+    echo "$name"
+}
+
+# Get git branch for a directory
+get_git_branch() {
+    local dir="$1"
+    if [[ -d "$dir/.git" ]] || git -C "$dir" rev-parse --git-dir &>/dev/null; then
+        git -C "$dir" branch --show-current 2>/dev/null || echo "detached"
+    fi
+}
+
+# Get git status summary
+get_git_status() {
+    local dir="$1"
+    if ! git -C "$dir" rev-parse --git-dir &>/dev/null; then
+        echo "Not a git repository"
+        return
+    fi
+    
+    local branch modified untracked ahead behind
+    branch=$(git -C "$dir" branch --show-current 2>/dev/null || echo "detached")
+    modified=$(git -C "$dir" status --porcelain 2>/dev/null | grep -c "^ M" || true)
+    untracked=$(git -C "$dir" status --porcelain 2>/dev/null | grep -c "^??" || true)
+    
+    local upstream
+    upstream=$(git -C "$dir" rev-parse --abbrev-ref '@{upstream}' 2>/dev/null || true)
+    
+    if [[ -n "$upstream" ]]; then
+        ahead=$(git -C "$dir" rev-list --count '@{upstream}..HEAD' 2>/dev/null || echo "0")
+        behind=$(git -C "$dir" rev-list --count 'HEAD..@{upstream}' 2>/dev/null || echo "0")
+    else
+        ahead=0
+        behind=0
+    fi
+    
+    echo "Branch: $branch"
+    [[ "$modified" -gt 0 ]] && echo "Modified: $modified files"
+    [[ "$untracked" -gt 0 ]] && echo "Untracked: $untracked files"
+    [[ "$ahead" -gt 0 ]] && echo "Ahead: $ahead commits"
+    [[ "$behind" -gt 0 ]] && echo "Behind: $behind commits"
+}
+
+# Generate preview content for a directory
+generate_preview() {
+    local dir="$1"
+    
+    echo "📁 Directory: $dir"
+    echo ""
+    
+    # Git info if available
+    if [[ -d "$dir/.git" ]] || git -C "$dir" rev-parse --git-dir &>/dev/null 2>&1; then
+        echo "🔀 Git Repository"
+        get_git_status "$dir"
+        echo ""
+    fi
+    
+    # List contents
+    echo "📄 Contents:"
+    # shellcheck disable=SC2012
+    ls -la "$dir" 2>/dev/null | head -20
+}
+
+# Find directories using configured search paths
+find_directories() {
+    local recursive="${1:-false}"
+    local git_only="${2:-false}"
+    local max_depth
+    
+    [[ "$recursive" == "true" ]] && max_depth=3 || max_depth=1
+    
+    local search_dirs
+    mapfile -t search_dirs < <(load_search_dirs)
+    
+    for dir in "${search_dirs[@]}"; do
+        if [[ "$git_only" == "true" ]]; then
+            # Find git repositories
+            find "$dir" -mindepth 1 -maxdepth "$max_depth" -type d -name ".git" 2>/dev/null | while read -r gitdir; do
+                dirname "$gitdir"
+            done
+        else
+            find "$dir" -mindepth 1 -maxdepth "$max_depth" -type d 2>/dev/null
+        fi
+    done | sort -u
+}
+
+# List existing tmux sessions
+list_sessions() {
+    if ! command -v tmux &>/dev/null; then
+        error "tmux is not installed"
+        return 1
+    fi
+    
+    if ! tmux list-sessions 2>/dev/null; then
+        warn "No tmux sessions found"
+        return 1
+    fi
+}
+
+# Interactive session switcher for existing sessions
+switch_session() {
+    local sessions
+    sessions=$(tmux list-sessions -F "#{session_name}:#{session_windows} windows:#{?session_attached,attached,detached}" 2>/dev/null)
+    
+    if [[ -z "$sessions" ]]; then
+        warn "No existing tmux sessions"
+        return 1
+    fi
+    
+    local selected
+    selected=$(echo "$sessions" | fzf \
+        --height 40% \
+        --reverse \
+        --header "Select session (Ctrl-d to delete)" \
+        --bind "ctrl-d:execute(tmux kill-session -t {1})+reload(tmux list-sessions -F '#{session_name}:#{session_windows} windows:#{?session_attached,attached,detached}' 2>/dev/null || echo '')" \
+        --delimiter ":" \
+        --preview "tmux capture-pane -t {1} -p 2>/dev/null || echo 'Session preview unavailable'" \
+        --preview-window right:50%:wrap)
+    
+    [[ -z "$selected" ]] && return 0
+    
+    local session_name
+    session_name=$(echo "$selected" | cut -d':' -f1)
+    
+    if [[ -n "$TMUX" ]]; then
+        tmux switch-client -t "$session_name"
+    else
+        tmux attach-session -t "$session_name"
+    fi
+}
+
+# Kill a session interactively
+kill_session_interactive() {
+    local sessions
+    sessions=$(tmux list-sessions -F "#{session_name}:#{session_windows} windows" 2>/dev/null)
+    
+    if [[ -z "$sessions" ]]; then
+        warn "No existing tmux sessions"
+        return 1
+    fi
+    
+    local selected
+    selected=$(echo "$sessions" | fzf \
+        --multi \
+        --height 40% \
+        --reverse \
+        --header "Select session(s) to kill (Tab to select multiple)" \
+        --delimiter ":")
+    
+    [[ -z "$selected" ]] && return 0
+    
+    echo "$selected" | while read -r line; do
+        local session_name
+        session_name=$(echo "$line" | cut -d':' -f1)
+        tmux kill-session -t "$session_name" && success "Killed session: $session_name"
+    done
+}
+
+# Kill all sessions with confirmation
+kill_all_sessions() {
+    local session_count
+    session_count=$(tmux list-sessions 2>/dev/null | wc -l)
+    
+    if [[ "$session_count" -eq 0 ]]; then
+        warn "No tmux sessions to kill"
+        return 0
+    fi
+    
+    echo -e "${YELLOW}WARNING: This will kill $session_count tmux session(s)${NC}"
+    read -rp "Are you sure? (yes/N): " confirm
+    
+    if [[ "$confirm" == "yes" ]]; then
+        tmux kill-server
+        success "All tmux sessions killed"
+    else
+        info "Cancelled"
+    fi
+}
+
+# Create or switch to a session for a directory
+create_or_switch_session() {
+    local selected="$1"
+    local preview="${2:-true}"
+    
+    # Validate directory exists
+    if [[ ! -d "$selected" ]]; then
+        error "Directory does not exist: $selected"
+        return 1
+    fi
+    
+    local session_name
+    session_name=$(get_session_name "$selected")
+    
+    # Check if tmux is running
+    local tmux_running
+    tmux_running=$(pgrep tmux || true)
+    
+    # If not in tmux and tmux is not running, create new session
+    if [[ -z "${TMUX:-}" ]] && [[ -z "$tmux_running" ]]; then
+        tmux new-session -s "$session_name" -c "$selected"
+        return 0
+    fi
+    
+    # Create session if it doesn't exist
+    if ! tmux has-session -t="$session_name" 2>/dev/null; then
+        tmux new-session -ds "$session_name" -c "$selected"
+        
+        # If it's a git repo, maybe set window name to branch
+        local branch
+        branch=$(get_git_branch "$selected")
+        if [[ -n "$branch" ]]; then
+            tmux rename-window -t "$session_name" "$branch" 2>/dev/null || true
+        fi
+        
+        success "Created new session: $session_name"
+    fi
+    
+    # Switch to the session
+    if [[ -n "${TMUX:-}" ]]; then
+        tmux switch-client -t "$session_name"
+    else
+        tmux attach-session -t "$session_name"
+    fi
+}
+
+# Main selection interface
+main_selector() {
+    local recursive="${1:-false}"
+    local git_only="${2:-false}"
+    local preview="${3:-true}"
+    
+    local fzf_opts=(
+        --height 80%
+        --reverse
+        --header "Select project directory (Ctrl-p toggle preview)"
+        --bind "ctrl-p:toggle-preview"
+    )
+    
+    if [[ "$preview" == "true" ]]; then
+        # Create temp script for preview
+        local preview_script
+        preview_script=$(mktemp)
+        cat > "$preview_script" << 'PREVIEW_EOF'
+#!/usr/bin/env bash
+dir="$1"
+echo "📁 Directory: $dir"
+echo ""
+if [[ -d "$dir/.git" ]] || git -C "$dir" rev-parse --git-dir &>/dev/null 2>&1; then
+    echo "🔀 Git Repository"
+    branch=$(git -C "$dir" branch --show-current 2>/dev/null || echo "detached")
+    echo "Branch: $branch"
+    modified=$(git -C "$dir" status --porcelain 2>/dev/null | grep -c "^ M" || true)
+    untracked=$(git -C "$dir" status --porcelain 2>/dev/null | grep -c "^??" || true)
+    [[ "$modified" -gt 0 ]] && echo "Modified: $modified files"
+    [[ "$untracked" -gt 0 ]] && echo "Untracked: $untracked files"
+    echo ""
+fi
+echo "📄 Contents:"
+ls -la "$dir" 2>/dev/null | head -15
+PREVIEW_EOF
+        chmod +x "$preview_script"
+        fzf_opts+=(--preview "bash '$preview_script' {}" --preview-window right:50%:wrap)
+        # shellcheck disable=SC2064
+        trap "rm -f '$preview_script'" EXIT
+    fi
+    
+    local selected
+    selected=$(find_directories "$recursive" "$git_only" | fzf "${fzf_opts[@]}")
+    
+    if [[ -z "$selected" ]]; then
+        return 0
+    fi
+    
+    create_or_switch_session "$selected" "$preview"
+}
+
+# Main function
+main() {
+    local recursive=false
+    local git_only=false
+    local preview=true
+    local direct_path=""
+    
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -h|--help)
+                show_help
+                return 0
+                ;;
+            -v|--version)
+                show_version
+                return 0
+                ;;
+            -l|--list)
+                list_sessions
+                return $?
+                ;;
+            -s|--switch)
+                switch_session
+                return $?
+                ;;
+            -k|--kill)
+                kill_session_interactive
+                return $?
+                ;;
+            -K|--kill-all)
+                kill_all_sessions
+                return $?
+                ;;
+            -c|--config)
+                edit_config
+                return 0
+                ;;
+            -a|--all)
+                recursive=true
+                shift
+                ;;
+            -g|--git-only)
+                git_only=true
+                shift
+                ;;
+            -p|--preview)
+                preview=true
+                shift
+                ;;
+            -P|--no-preview)
+                preview=false
+                shift
+                ;;
+            -*)
+                error "Unknown option: $1"
+                echo "Use --help for usage information"
+                return 1
+                ;;
+            *)
+                direct_path="$1"
+                shift
+                ;;
+        esac
+    done
+    
+    # Check for required dependencies
+    if ! command -v fzf &>/dev/null; then
+        error "fzf is not installed. Please install fzf first."
+        return 1
+    fi
+    
+    if ! command -v tmux &>/dev/null; then
+        error "tmux is not installed. Please install tmux first."
+        return 1
+    fi
+    
+    # If direct path provided, use it
+    if [[ -n "$direct_path" ]]; then
+        # Expand path
+        direct_path="${direct_path/#\~/$HOME}"
+        create_or_switch_session "$direct_path"
+        return $?
+    fi
+    
+    # Interactive selection
+    main_selector "$recursive" "$git_only" "$preview"
+}
+
+# Run main
+main "$@"
