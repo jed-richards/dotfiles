@@ -21,6 +21,7 @@
         "network",
 	"power-profiles-daemon",
         "battery",
+        "custom/dark-mode",
         "custom/power"
     ],
 
@@ -117,6 +118,14 @@
             "balanced": "",
             "power-saver": ""
         }
+    },
+
+    "custom/dark-mode": {
+        "exec": "~/.config/waybar/scripts/dark-mode.sh",
+        "on-click": "~/.config/waybar/scripts/dark-mode.sh toggle",
+        "return-type": "json",
+        "interval": 5,
+        "tooltip": true
     },
 
     "custom/power": {
