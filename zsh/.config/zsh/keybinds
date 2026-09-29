@@ -12,5 +12,17 @@ autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey '^v' edit-command-line
 
+# Comment out the whole buffer (every line) and accept it into history w/ <alt-#> or <esc-#>.
+# Plain `#` only comments the first line of a multiline command.
+setopt interactive_comments
+comment-out-buffer() {
+  local -a lines
+  lines=("${(@f)BUFFER}")
+  BUFFER="${(F)${(@)lines/#/# }}"
+  zle accept-line
+}
+zle -N comment-out-buffer
+bindkey '^[#' comment-out-buffer
+
 # Scripts
 bindkey -s ^f "tmux-sessionizer\n"
