@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# gh-stack-md - Render `gh stack view --json` as a numbered markdown list
+# Usage: gh-stack-md [-c]   (-c: copy to clipboard via pbcopy)
+#        gh stack view --json | gh-stack-md
+
+set -euo pipefail
+
+copy=0
+[ "${1:-}" = "-c" ] && copy=1
+
+for dep in gh jq; do
+    command -v "$dep" > /dev/null || { echo "error: '$dep' not found" >&2; exit 1; }
+done
+
+if [ -t 0 ]; then
+    json="$(gh stack view --json)"
+else
+    json="$(cat)"
+fi
+
+out="$(jq -r '
+  .branches
+  | to_entries
+  | map(
+      "\(.key + 1). "
+      + (.value.pr.url // "(no PR)")
+      + " - `\(.value.name)`"
+      + (if .value.isMerged then " (merged)"
+         elif .value.isQueued then " (queued)"
+         elif .value.needsRebase then " (needs rebase)"
+         else "" end)
+    )
+  | .[]
+' <<< "$json")"
+
+printf '%s\n' "$out"
+[ "$copy" -eq 1 ] && printf '%s\n' "$out" | pbcopy
+exit 0
