@@ -50,7 +50,7 @@ alt-shift-k = 'move up'
 alt-shift-l = 'move right'
 
 # Resize
-alt-leftSquareBracket  = 'resize smart -50'
+alt-leftSquareBracket = 'resize smart -50'
 alt-rightSquareBracket = 'resize smart +50'
 
 # Workspaces
@@ -114,6 +114,11 @@ run = 'move-node-to-workspace 2'
 [[on-window-detected]]
 if.app-id = 'com.apple.Safari'
 run = 'move-node-to-workspace 2'
+
+# Teams -> workspace 7 (laptop)
+[[on-window-detected]]
+if.app-id = 'com.microsoft.teams2'
+run = 'move-node-to-workspace 7'
 
 # Slack -> workspace 8 (laptop)
 [[on-window-detected]]
