@@ -1,6 +1,11 @@
 // ~/.config/niri/config.kdl
 // niri scrollable-tiling Wayland compositor
 // Docs: https://github.com/niri-wm/niri/wiki/Configuration
+//
+// Keybind convention:
+//   Mod        focus / act
+//   Mod+Shift  move stuff (windows, columns, to workspaces)
+//   Mod+Ctrl   monitors
 
 environment {
     XCURSOR_SIZE "24"
@@ -12,92 +17,157 @@ input {
         xkb {
             options "caps:escape"
         }
+        numlock
     }
     touchpad {
-        // tap-to-click disabled (absent = off)
+        tap
+        natural-scroll
         click-method "clickfinger"
-        // natural-scroll disabled (absent = off)
-        accel-speed 0.0
     }
+}
+
+// External monitor on the left, laptop on the right.
+// Find connector names with `niri msg outputs`.
+output "DP-3" {
+    position x=0 y=0
 }
 
 output "eDP-1" {
-    scale 1.333
-    // 2560x1600 HiDPI — scale 4/3 gives exactly 1920x1200 logical (cleanest ratio in range)
-    // Other options: 1.25 (→ 2048x1280, more space), 2.0 (→ 1280x800, larger UI)
-    // To add DP-3 later: duplicate this block with name "DP-3" and set position
+    position x=1920 y=0
 }
 
 layout {
-    gaps 3
+    gaps 16
+    center-focused-column "never"
 
-    struts {
-        top 2   // clearance for waybar
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+    default-column-width { proportion 0.5; }
+
+    focus-ring {
+        width 4
+        active-color "#7fc8ff"
+        inactive-color "#505050"
     }
 
     border {
-        width 2
-        active-color "#33ccffee"
-        inactive-color "#595959aa"
+        off
     }
 
-    focus-ring {
-        off
+    shadow {
+        softness 30
+        spread 5
+        offset x=0 y=5
+        color "#0007"
     }
 }
 
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
 // ── Autostart ──────────────────────────────────────────────────────────────
+// waybar, hypridle, hyprpaper and mako are systemd user services wanted by
+// niri.service (see the systemd package), so they are not spawned here.
+// xwayland-satellite is started by niri on demand.
+
 // Propagate Wayland env to D-Bus activation so apps launched via .desktop
 // files (zen browser, LibreOffice, etc.) can find the Wayland display
 spawn-at-startup "sh" "-c" "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=niri DISPLAY"
-// Note: niri does not expand ~ in spawn-at-startup args — use sh -c for paths
-spawn-at-startup "sh" "-c" "waybar --config ~/.config/waybar/niri-config.jsonc"
-spawn-at-startup "dunst"
-spawn-at-startup "hypridle"
-spawn-at-startup "sh" "-c" "swaybg -i ~/dotfiles/wallpapers/skipper-and-bennie-1.png -m fill"
+spawn-at-startup "blueman-applet"
 spawn-at-startup "lxqt-policykit-agent"
-spawn-at-startup "xwayland-satellite"
-spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
-spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
-spawn-at-startup "systemctl" "--user" "start" "elephant"
 
 // ── Binds ──────────────────────────────────────────────────────────────────
 binds {
-    // Window management
-    Mod+Q { close-window; }
-    Mod+F { maximize-column; }
-    Mod+Shift+F { fullscreen-window; }
-    Mod+Ctrl+F { toggle-window-floating; }
-    Mod+Shift+C { center-window; }
-    Mod+Shift+P { power-off-monitors; }
+    Mod+Shift+Slash { show-hotkey-overlay; }
 
-    // Focus / move — scrollable model
-    // h/l: scroll between columns   j/k: move within a column (stacked windows)
-    Mod+H { focus-column-left; }
-    Mod+L { focus-column-right; }
-    Mod+J { focus-window-down; }
-    Mod+K { focus-window-up; }
-    Mod+Shift+H { move-column-left; }
-    Mod+Shift+L { move-column-right; }
-    Mod+Shift+J { move-window-down; }
-    Mod+Shift+K { move-window-up; }
-    Mod+Ctrl+Shift+H { focus-monitor-left; }
-    Mod+Ctrl+Shift+L { focus-monitor-right; }
+    // Apps
+    Mod+Return hotkey-overlay-title="Open a Terminal: ghostty" { spawn "ghostty"; }
+    Mod+Space hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
+    Super+Alt+L hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "hyprlock"; }
+    Super+Alt+S allow-when-locked=true hotkey-overlay-title=null { spawn-sh "pkill orca || exec orca"; }
+    Mod+T { spawn "systemctl" "--user" "restart" "waybar"; }
+
+    // Media keys
+    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
+    XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
+    XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
+    XF86AudioPlay        allow-when-locked=true { spawn-sh "playerctl play-pause"; }
+    XF86AudioPause       allow-when-locked=true { spawn-sh "playerctl play-pause"; }
+    XF86AudioStop        allow-when-locked=true { spawn-sh "playerctl stop"; }
+    XF86AudioPrev        allow-when-locked=true { spawn-sh "playerctl previous"; }
+    XF86AudioNext        allow-when-locked=true { spawn-sh "playerctl next"; }
+    XF86MonBrightnessUp   allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
+
+    Mod+O repeat=false { toggle-overview; }
+    Mod+Q repeat=false { close-window; }
     Mod+Tab { focus-window-previous; }
 
-    // Column sizing
-    Mod+R { switch-preset-column-width; }       // cycles: 1/3 → 1/2 → 2/3 → full
-    Mod+Shift+R { reset-window-height; }
-    Mod+Minus { set-column-width "-10%"; }
-    Mod+Equal { set-column-width "+10%"; }
-    Mod+Shift+Minus { set-window-height "-10%"; }
-    Mod+Shift+Equal { set-window-height "+10%"; }
+    // Focus
+    Mod+Left  { focus-column-left; }
+    Mod+Down  { focus-window-down; }
+    Mod+Up    { focus-window-up; }
+    Mod+Right { focus-column-right; }
+    Mod+H     { focus-column-left; }
+    Mod+J     { focus-window-down; }
+    Mod+K     { focus-window-up; }
+    Mod+L     { focus-column-right; }
+    Mod+Home  { focus-column-first; }
+    Mod+End   { focus-column-last; }
 
-    // Tabbed columns
-    Mod+Comma { consume-window-into-column; }   // group window into tab
-    Mod+Period { expel-window-from-column; }    // pop window out of tab
+    // Move
+    Mod+Shift+Left  { move-column-left; }
+    Mod+Shift+Down  { move-window-down; }
+    Mod+Shift+Up    { move-window-up; }
+    Mod+Shift+Right { move-column-right; }
+    Mod+Shift+H     { move-column-left; }
+    Mod+Shift+J     { move-window-down; }
+    Mod+Shift+K     { move-window-up; }
+    Mod+Shift+L     { move-column-right; }
+
+    // Monitors
+    Mod+Ctrl+Left  { focus-monitor-left; }
+    Mod+Ctrl+Down  { focus-monitor-down; }
+    Mod+Ctrl+Up    { focus-monitor-up; }
+    Mod+Ctrl+Right { focus-monitor-right; }
+    Mod+Ctrl+H     { focus-monitor-left; }
+    Mod+Ctrl+J     { focus-monitor-down; }
+    Mod+Ctrl+K     { focus-monitor-up; }
+    Mod+Ctrl+L     { focus-monitor-right; }
+
+    Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
+    Mod+Shift+Ctrl+Down  { move-column-to-monitor-down; }
+    Mod+Shift+Ctrl+Up    { move-column-to-monitor-up; }
+    Mod+Shift+Ctrl+Right { move-column-to-monitor-right; }
+    Mod+Shift+Ctrl+H     { move-column-to-monitor-left; }
+    Mod+Shift+Ctrl+J     { move-column-to-monitor-down; }
+    Mod+Shift+Ctrl+K     { move-column-to-monitor-up; }
+    Mod+Shift+Ctrl+L     { move-column-to-monitor-right; }
 
     // Workspaces
+    Mod+Page_Down      { focus-workspace-down; }
+    Mod+Page_Up        { focus-workspace-up; }
+    Mod+U              { focus-workspace-down; }
+    Mod+I              { focus-workspace-up; }
+    Mod+Shift+Page_Down { move-workspace-down; }
+    Mod+Shift+Page_Up   { move-workspace-up; }
+    Mod+Shift+U         { move-workspace-down; }
+    Mod+Shift+I         { move-workspace-up; }
+    Mod+Shift+BracketLeft  { move-window-to-workspace-down; }
+    Mod+Shift+BracketRight { move-window-to-workspace-up; }
+
+    Mod+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
+    Mod+WheelScrollUp        cooldown-ms=150 { focus-workspace-up; }
+
+    Mod+WheelScrollRight      { focus-column-right; }
+    Mod+WheelScrollLeft       { focus-column-left; }
+
+    Mod+Shift+WheelScrollDown      { focus-column-right; }
+    Mod+Shift+WheelScrollUp        { focus-column-left; }
+
     Mod+1 { focus-workspace 1; }
     Mod+2 { focus-workspace 2; }
     Mod+3 { focus-workspace 3; }
@@ -116,47 +186,57 @@ binds {
     Mod+Shift+7 { move-window-to-workspace 7; }
     Mod+Shift+8 { move-window-to-workspace 8; }
     Mod+Shift+9 { move-window-to-workspace 9; }
-    Mod+BracketLeft { focus-workspace-down; }
-    Mod+BracketRight { focus-workspace-up; }
-    Mod+Shift+BracketLeft { move-window-to-workspace-down; }
-    Mod+Shift+BracketRight { move-window-to-workspace-up; }
 
-    // Apps
-    Mod+Return { spawn "ghostty"; }
-    Mod+Space { spawn "walker"; }
-    Mod+V { spawn "walker" "--modules" "clipboard"; }
-    Mod+Escape { spawn "hyprlock"; }
-    Mod+T { spawn "sh" "-c" "pkill waybar; waybar --config ~/.config/waybar/niri-config.jsonc"; }
+    // Columns
+    Mod+BracketLeft  { consume-or-expel-window-left; }
+    Mod+BracketRight { consume-or-expel-window-right; }
+    Mod+Comma  { consume-window-into-column; }
+    Mod+Period { expel-window-from-column; }
+    Mod+W { toggle-column-tabbed-display; }
 
-    // Screenshots — grim + slurp + satty
+    // Sizing
+    Mod+R { switch-preset-column-width; }
+    Mod+Shift+R { switch-preset-column-width-back; }
+    Mod+Ctrl+Shift+R { switch-preset-window-height; }
+    Mod+Ctrl+R { reset-window-height; }
+    Mod+F { maximize-column; }
+    Mod+Shift+F { fullscreen-window; }
+    Mod+M { maximize-window-to-edges; }
+    Mod+Ctrl+F { expand-column-to-available-width; }
+    Mod+C { center-column; }
+    Mod+Shift+C { center-window; }
+    Mod+Ctrl+C { center-visible-columns; }
+    Mod+Minus { set-column-width "-10%"; }
+    Mod+Equal { set-column-width "+10%"; }
+    Mod+Shift+Minus { set-window-height "-10%"; }
+    Mod+Shift+Equal { set-window-height "+10%"; }
+
+    // Floating
+    Mod+V       { toggle-window-floating; }
+    Mod+Shift+V { switch-focus-between-floating-and-tiling; }
+
+    // Screenshots: Print/Ctrl/Alt save to screenshot-path; Mod+ opens satty
+    Print { screenshot; }
+    Ctrl+Print { screenshot-screen; }
+    Alt+Print { screenshot-window; }
     // --copy-command wl-copy persists clipboard after satty closes (Wayland ownership fix)
-    Print { spawn "sh" "-c" "grim -g \"$(slurp)\" - | satty --filename - --copy-command wl-copy"; }
-    Mod+Print { spawn "sh" "-c" "grim - | satty --filename - --copy-command wl-copy"; }
-    Mod+Ctrl+Print { spawn "sh" "-c" "grim -g \"$(slurp)\" | wl-copy"; }
-
-    // Media keys
-    XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "-l" "1" "@DEFAULT_AUDIO_SINK@" "5%+"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
-    XF86AudioMute allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
-    XF86AudioMicMute allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
-    XF86MonBrightnessUp { spawn "brightnessctl" "-e4" "-n2" "set" "5%+"; }
-    XF86MonBrightnessDown { spawn "brightnessctl" "-e4" "-n2" "set" "5%-"; }
-    XF86AudioNext { spawn "playerctl" "next"; }
-    XF86AudioPause { spawn "playerctl" "play-pause"; }
-    XF86AudioPlay { spawn "playerctl" "play-pause"; }
-    XF86AudioPrev { spawn "playerctl" "previous"; }
+    Mod+Print { spawn "sh" "-c" "grim -g \"$(slurp)\" - | satty --filename - --copy-command wl-copy"; }
+    Mod+Ctrl+Print { spawn "sh" "-c" "grim - | satty --filename - --copy-command wl-copy"; }
 
     // Session
-    Mod+Shift+Ctrl+E { quit; }
-    Mod+Shift+Ctrl+R { spawn "sh" "-c" "niri msg action reload-config"; }
+    Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+    Mod+Shift+E { quit; }
+    Ctrl+Alt+Delete { quit; }
+    Mod+Shift+P { power-off-monitors; }
 }
 
 // ── Window rules ───────────────────────────────────────────────────────────
 window-rule {
-    // If this rule doesn't apply, verify the app-id by running:
-    //   niri msg windows
-    // while satty is open and update the match string below.
+    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
+    open-floating true
+}
+
+window-rule {
     match app-id="satty"
     open-floating true
-    // open-centered: floating windows open centered by default in niri
 }
