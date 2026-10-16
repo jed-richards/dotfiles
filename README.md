@@ -21,6 +21,9 @@ git submodule update --init --recursive
 4. Stow!
 
 ```bash
+# Stow everything for this OS (inits submodules if needed; -n dry run, -R restow, -D unstow, -h help)
+./stow.sh
+
 # Stow individual packages
 stow -t $HOME nvim
 stow -t $HOME zsh
