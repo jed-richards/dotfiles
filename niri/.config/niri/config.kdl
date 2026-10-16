@@ -32,7 +32,7 @@ layout {
     gaps 3
 
     struts {
-        top 2   // clearance for waybar; mirrors gaps_out = 2,0,0,0 from Hyprland
+        top 2   // clearance for waybar
     }
 
     border {

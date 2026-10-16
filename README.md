@@ -54,5 +54,5 @@ ln -s ../../../tools/<name>/<binary> <name>
 Use the below to auto reload `waybar` when editing the config.
 
 ```bash
-watchexec -w waybar/.config "(pkill waybar || true) && hyprctl dispatch exec waybar"
+watchexec -w waybar/.config "(pkill waybar || true) && niri msg action spawn -- waybar"
 ```
