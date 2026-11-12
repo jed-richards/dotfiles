@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# jwt-decode - Decode the header and payload of a JWT (signature not verified)
+# Usage: jwt-decode <token>
+#        pbpaste | jwt-decode
+
+set -euo pipefail
+
+command -v jq > /dev/null || { echo "error: 'jq' not found" >&2; exit 1; }
+
+if [ $# -ge 1 ]; then
+    input="$1"
+elif [ ! -t 0 ]; then
+    input="$(cat)"
+else
+    echo "usage: jwt-decode <token>  (or pipe the token on stdin)" >&2
+    exit 1
+fi
+
+jq -R 'split(".") | .[0:2]
+  | map(gsub("-"; "+") | gsub("_"; "/") | gsub("%3D"; "=") | @base64d)
+  | map(fromjson)' <<< "$input"
