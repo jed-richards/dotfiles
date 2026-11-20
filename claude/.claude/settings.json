@@ -79,7 +79,7 @@
     "ask": [],
     "defaultMode": "default"
   },
-  "model": "opusplan",
+  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/scripts/statusline-command.sh"
