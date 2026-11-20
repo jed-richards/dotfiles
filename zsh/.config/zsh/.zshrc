@@ -53,6 +53,10 @@ if command -v docker &>/dev/null; then
     eval "$(docker completion zsh)"
 fi
 
+if command -v zoxide &>/dev/null; then
+    eval "$(zoxide init zsh)"
+fi
+
 if [ -e /usr/share/nvm/init-nvm.sh ]; then
     source /usr/share/nvm/init-nvm.sh
 fi
